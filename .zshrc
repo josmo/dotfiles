@@ -5,6 +5,7 @@ export PATH=$PATH:/Users/jhill/Library/Android/sdk/platform-tools
 export PATH=$PATH:/Users/jhill/Documents/goworkspace/bin
 export PATH=$PATH:/usr/local/terraform/bin
 export GOPATH=/Users/jhill/Documents/goworkspace
+export ANDROID_HOME=/Users/jhill/Library/Android/sdk
 # Path to your oh-my-zsh installation.
 export ZSH=/Users/jhill/.oh-my-zsh
 
