@@ -1,10 +1,10 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
-export ORACLE_HOME=/Users/jhill/Oracle/Middleware/Oracle_Home
 export PATH=$PATH:/Users/jhill/Library/Android/sdk/platform-tools
-export PATH=$PATH:/Users/jhill/Documents/goworkspace/bin
+export PATH=$PATH:/Users/jhill/Development/goworkspace/bin
 export PATH=$PATH:/usr/local/terraform/bin
-export GOPATH=/Users/jhill/Documents/goworkspace
+export PATH=$PATH:/Users/jhill/Development/flutter/bin
+export GOPATH=/Users/jhill/Development/goworkspace
 export ANDROID_HOME=/Users/jhill/Library/Android/sdk
 # Path to your oh-my-zsh installation.
 export ZSH=/Users/jhill/.oh-my-zsh
