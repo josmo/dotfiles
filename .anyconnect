@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <AnyConnectPreferences>
-<DefaultUser>jhill-grannec</DefaultUser>
+<DefaultUser>jhillgrannec</DefaultUser>
 <DefaultSecondUser></DefaultSecondUser>
-<ClientCertificateThumbprint>7C32FBB033189619D3BDE630D6258E56A6611F86</ClientCertificateThumbprint>
+<ClientCertificateThumbprint></ClientCertificateThumbprint>
+<MultipleClientCertificateThumbprints></MultipleClientCertificateThumbprints>
 <ServerCertificateThumbprint></ServerCertificateThumbprint>
-<DefaultHostName>ImpinjVPN</DefaultHostName>
+<DefaultHostName>Impinj</DefaultHostName>
 <DefaultHostAddress></DefaultHostAddress>
-<DefaultGroup>Impinj-AnyConnect</DefaultGroup>
+<DefaultGroup>Impinj-MFA</DefaultGroup>
 <ProxyHost></ProxyHost>
 <ProxyPort></ProxyPort>
 <SDITokenType>none</SDITokenType>
-<ControllablePreferences></ControllablePreferences>
+<ControllablePreferences>
+<AutoConnectOnStart>true</AutoConnectOnStart>
+<LocalLanAccess>true</LocalLanAccess>
+<BlockUntrustedServers>false</BlockUntrustedServers></ControllablePreferences>
 </AnyConnectPreferences>

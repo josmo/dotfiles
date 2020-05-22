@@ -6,6 +6,9 @@ export PATH=$PATH:/usr/local/terraform/bin
 export PATH=$PATH:/Users/jhill/Development/flutter/bin
 export GOPATH=/Users/jhill/Development/goworkspace
 export ANDROID_HOME=/Users/jhill/Library/Android/sdk
+export PATH="$HOME/.fastlane/bin:$PATH"
+export VAULT_ADDR=https://vault.pelo.tech:8200
+alias vault-login="vault login -no-print=true -method=github username=josmo token=`cat $HOME/.github_token`"
 # Path to your oh-my-zsh installation.
 export ZSH=/Users/jhill/.oh-my-zsh
 
@@ -56,7 +59,7 @@ ZSH_THEME="pygmalion"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git colored-man colorize github jira vagrant virtualenv pip python brew osx zsh-syntax-highlighting fasd docker)
+plugins=(git colored-man-pages colorize github jira vagrant virtualenv pip python brew osx fasd docker zsh-syntax-highlighting kubectl helm)
 
 source $ZSH/oh-my-zsh.sh
 
