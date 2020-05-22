@@ -1,29 +1,25 @@
 [user]
   name = Joachim Hill-Grannec
-  email = joachim@suvault.com
+  email = joachim.hill@gmail.com
+  signingkey = 4391E44ED5D6BB46
 [core]
-  editor = vi
-  excludesfile = ~/.gitignore
+  editor = vim
+  excludesfile = ~/.gitignore_global
   autocrlf = input
+[commit]
+  gpgsign = true
 [color]
   branch = auto
   diff = auto
   interactive = auto
   status = auto
-[web]
-  browser = google-chrome
 [credential]
   helper = osxkeychain
-[push]
-  default = simple
-[merge]
-  tool = kdiff3
-[difftool "sourcetree"]
-        cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-        path =
-[mergetool "sourcetree"]
-        cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-        trustExitCode = true
+[gpg]
+  program = gpg
+# Enforce SSH
+[url "ssh://git@github.com/"]
+ insteadOf = https://github.com/
 [alias]
   c = commit
   ca = commit -a
