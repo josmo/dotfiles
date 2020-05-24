@@ -1,13 +1,14 @@
 [user]
-  name = Joachim Hill-Grannec
-  email = joachim.hill@gmail.com
+	name = Joachim Hill-Grannec
+	email = joachim.hill@gmail.com
   signingkey = 4391E44ED5D6BB46
 [core]
   editor = vim
-  excludesfile = ~/.gitignore_global
+	excludesfile = /Users/jhill/.gitignore_global
   autocrlf = input
 [commit]
   gpgsign = true
+	template = /Users/jhill/.stCommitMsg
 [color]
   branch = auto
   diff = auto
@@ -16,7 +17,7 @@
 [credential]
   helper = osxkeychain
 [gpg]
-  program = gpg
+  program = /usr/local/bin/gpg
 # Enforce SSH
 [url "ssh://git@github.com/"]
  insteadOf = https://github.com/
