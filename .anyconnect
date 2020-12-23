@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <AnyConnectPreferences>
-<DefaultUser>jhillgrannec</DefaultUser>
+<DefaultUser>JHillgr1</DefaultUser>
 <DefaultSecondUser></DefaultSecondUser>
 <ClientCertificateThumbprint></ClientCertificateThumbprint>
 <MultipleClientCertificateThumbprints></MultipleClientCertificateThumbprints>
 <ServerCertificateThumbprint></ServerCertificateThumbprint>
-<DefaultHostName>Impinj</DefaultHostName>
+<DefaultHostName>east.vpn.t-mobile.com</DefaultHostName>
 <DefaultHostAddress></DefaultHostAddress>
-<DefaultGroup>Impinj-MFA</DefaultGroup>
+<DefaultGroup>AnyConnectVIDP</DefaultGroup>
 <ProxyHost></ProxyHost>
 <ProxyPort></ProxyPort>
 <SDITokenType>none</SDITokenType>
 <ControllablePreferences>
-<AutoConnectOnStart>true</AutoConnectOnStart>
-<LocalLanAccess>true</LocalLanAccess>
-<BlockUntrustedServers>false</BlockUntrustedServers></ControllablePreferences>
+<AutoConnectOnStart>false</AutoConnectOnStart>
+<BlockUntrustedServers>false</BlockUntrustedServers>
+<EnableAutomaticServerSelection>true</EnableAutomaticServerSelection>
+<MinimizeOnConnect>true</MinimizeOnConnect>
+<DisableCaptivePortalDetection>false</DisableCaptivePortalDetection></ControllablePreferences>
 </AnyConnectPreferences>

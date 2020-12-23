@@ -1,3 +1,8 @@
+export PATH=$PATH:/Users/jhill/Library/Android/sdk/platform-tools
+#  export NVM_DIR="$HOME/.nvm"
+#  [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+#  [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm" 
+eval $(thefuck --alias)
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -99,4 +104,6 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias stree='/Applications/SourceTree.app/Contents/Resources/stree'
 alias vault-login="vault login -no-print=true -method=github username=josmo token=`cat $HOME/.github_token`"
+
 export VAULT_ADDR=https://vault.pelo.tech:8200
+export NPM_TOKEN=`cat $HOME/.npm_token`

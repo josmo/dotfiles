@@ -1,6 +1,6 @@
 [user]
-	name = Joachim Hill-Grannec
-	email = joachim.hill@gmail.com
+  name = Joachim Hill-Grannec
+  email = joachim.hill@gmail.com
   signingkey = 4391E44ED5D6BB46
 [core]
   editor = vim
@@ -21,6 +21,12 @@
 # Enforce SSH
 [url "ssh://git@github.com/"]
  insteadOf = https://github.com/
+[url "git@tmo.gitlab.com:tmobile"]
+ insteadOf = git@gitlab.com:tmobile
+[url "git@tmo.gitlab.com:JHillgr1"]
+ insteadOf = git@gitlab.com:JHillgr1
+[url "git@tmo.gitlab.com:tmobile"]
+  insteadOf = https://gitlab.com/tmobile
 [alias]
   c = commit
   ca = commit -a
@@ -29,3 +35,11 @@
   d = diff
   dc = diff --cached
   l = log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[includeIf "gitdir:**/tmo/**/.git"]
+  path = .gitconfig.tmo
