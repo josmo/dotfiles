@@ -5,7 +5,7 @@
 <ClientCertificateThumbprint></ClientCertificateThumbprint>
 <MultipleClientCertificateThumbprints></MultipleClientCertificateThumbprints>
 <ServerCertificateThumbprint></ServerCertificateThumbprint>
-<DefaultHostName>east.vpn.t-mobile.com</DefaultHostName>
+<DefaultHostName>west.vpn.t-mobile.com</DefaultHostName>
 <DefaultHostAddress></DefaultHostAddress>
 <DefaultGroup>AnyConnectVIDP</DefaultGroup>
 <ProxyHost></ProxyHost>
