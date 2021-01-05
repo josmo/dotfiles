@@ -106,7 +106,37 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias stree='/Applications/SourceTree.app/Contents/Resources/stree'
-alias vault-login="vault login -no-print=true -method=github username=josmo token=`cat $HOME/.github_token`"
+alias vault-login="vault login -no-print=true -method=github username=josmo token=`cat $HOME/.local_config/github_token`"
 
 export VAULT_ADDR=https://vault.pelo.tech:8200
-export NPM_TOKEN=`cat $HOME/.npm_token`
+export NPM_TOKEN=`cat $HOME/.local_config/npm_token`
+export OPENCONNECT_USER=`cat $HOME/.local_config/vpn_user`
+export OPENCONNECT_HOST=`cat $HOME/.local_config/vpn_host`
+
+function vpn-up() {
+ SPLIT_COMMAND=""
+ 
+ if [[ "$1" == "split" ]]
+ then
+   SPLIT_COMMAND="--script='$HOME/vpn-split.sh'"
+ fi
+
+  cat ~/.local_config/vpn_password | sudo openconnect \
+  --background \
+  --pid-file="$HOME/.openconnect.pid" \
+  --user=$OPENCONNECT_USER \
+  $SPLIT_COMMAND \
+  --useragent='AnyConnect Darwin_x64 3.9.04053' \
+  --passwd-on-stdin \
+  $OPENCONNECT_HOST
+}
+function vpn-split() {
+  vpn-up split
+}
+function vpn-down() {
+    if [[ -f "$HOME/.openconnect.pid" ]]; then
+        sudo kill -2 $(cat "$HOME/.openconnect.pid") && rm -f "$HOME/.openconnect.pid"
+    else
+        echo "openconnect pid file does not exist, probably not running"
+    fi
+}
