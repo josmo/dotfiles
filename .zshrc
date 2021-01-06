@@ -118,7 +118,7 @@ function vpn-up() {
  
  if [[ "$1" == "split" ]]
  then
-   SPLIT_COMMAND="--script='$HOME/vpn-split.sh'"
+   SPLIT_COMMAND="--script='$HOME/.local_config/vpnc-script.sh'"
  fi
 
   cat ~/.local_config/vpn_password | sudo openconnect \
