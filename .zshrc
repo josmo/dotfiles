@@ -140,3 +140,7 @@ function vpn-down() {
         echo "openconnect pid file does not exist, probably not running"
     fi
 }
+function unifi() {
+cd /Applications/UniFi.app/Contents/Resources
+java -jar /Applications/UniFi.app/Contents/Resources/lib/ace.jar ui
+}
