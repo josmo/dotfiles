@@ -1,4 +1,12 @@
+if type brew &>/dev/null; then
+  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+
+  autoload -Uz compinit
+  compinit
+fi
+
 export PATH=$PATH:/Users/jhill/Library/Android/sdk/platform-tools
+export PATH=$PATH:/Users/jhill/Development/flutter/bin
 #  export NVM_DIR="$HOME/.nvm"
 #  [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
 #  [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm" 
@@ -114,6 +122,7 @@ export OPENCONNECT_USER=`cat $HOME/.local_config/vpn_user`
 export OPENCONNECT_HOST=`cat $HOME/.local_config/vpn_host`
 
 function vpn-up() {
+ one
  SPLIT_COMMAND=""
  
  if [[ "$1" == "split" ]]
@@ -121,7 +130,7 @@ function vpn-up() {
    SPLIT_COMMAND="--script='$HOME/.local_config/vpnc-script.sh'"
  fi
 
-  cat ~/.local_config/vpn_password | sudo openconnect \
+  op get item tmobile | jq -r '.details.fields[] | select(.designation=="password").value' | sudo openconnect \
   --background \
   --pid-file="$HOME/.openconnect.pid" \
   --user=$OPENCONNECT_USER \
@@ -144,3 +153,10 @@ function unifi() {
 cd /Applications/UniFi.app/Contents/Resources
 java -jar /Applications/UniFi.app/Contents/Resources/lib/ace.jar ui
 }
+function one() {
+eval $(op signin grannec)
+}
+function wp-aws() {
+op get totp 'warbyparker aws' | aws-mfa --profile wp
+}
+

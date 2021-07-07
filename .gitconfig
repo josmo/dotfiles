@@ -43,3 +43,5 @@
 	trustExitCode = true
 [includeIf "gitdir:**/tmo/**/.git"]
   path = .gitconfig.tmo
+[init]
+	defaultBranch = main
