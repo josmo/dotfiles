@@ -45,3 +45,5 @@
   path = .gitconfig.tmo
 [init]
 	defaultBranch = main
+[pull]
+	rebase = false

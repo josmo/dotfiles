@@ -121,7 +121,22 @@ export NPM_TOKEN=`cat $HOME/.local_config/npm_token`
 export OPENCONNECT_USER=`cat $HOME/.local_config/vpn_user`
 export OPENCONNECT_HOST=`cat $HOME/.local_config/vpn_host`
 
-function vpn-up() {
+
+function vpn-up-gs() {
+ one
+ TOKEN_SECRET=$(op get totp 'gamestop')
+ VPN_PASSWORD=$(op get item gamestop | jq -r '.details.fields[] | select(.designation=="password").value')
+ { printf "$VPN_PASSWORD\n"; sleep 1; printf "$TOKEN_SECRET\n"; } | sudo openconnect \
+ --background \
+ --pid-file="$HOME/.openconnect.pid" \
+ --authgroup='vpn_isquad_mfa' \
+ --servercert pin-sha256:J6oHAiOd0dh4B+kgX+GvMIrPmHSR9+N4dGuOOPjeNVg= \
+ --user='v_jgrannec' \
+ --passwd-on-stdin \
+ vpn.gamestop.com
+}
+
+function vpn-up-tmo() {
  one
  SPLIT_COMMAND=""
  
@@ -139,8 +154,9 @@ function vpn-up() {
   --passwd-on-stdin \
   $OPENCONNECT_HOST
 }
+
 function vpn-split() {
-  vpn-up split
+  vpn-up-tmo split
 }
 function vpn-down() {
     if [[ -f "$HOME/.openconnect.pid" ]]; then
@@ -154,9 +170,11 @@ cd /Applications/UniFi.app/Contents/Resources
 java -jar /Applications/UniFi.app/Contents/Resources/lib/ace.jar ui
 }
 function one() {
-eval $(op signin grannec)
+eval $(security find-generic-password -w -s "1password" | op signin grannec)
 }
 function wp-aws() {
 op get totp 'warbyparker aws' | aws-mfa --profile wp
 }
 
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
