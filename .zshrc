@@ -125,8 +125,8 @@ export OPENCONNECT_HOST=`cat $HOME/.local_config/vpn_host`
 function vpn-up-gs() {
  one
  TOKEN_SECRET=$(op get totp 'gamestop')
- VPN_PASSWORD=$(op get item gamestop | jq -r '.details.fields[] | select(.designation=="password").value')
- { printf "$VPN_PASSWORD\n"; sleep 1; printf "$TOKEN_SECRET\n"; } | sudo openconnect \
+ PASSWORD=$(op get item gamestop | jq -r '.details.fields[] | select(.designation=="password").value')
+ { printf "$PASSWORD\n"; sleep 1; printf "$TOKEN_SECRET\n"; } | sudo openconnect \
  --background \
  --pid-file="$HOME/.openconnect.pid" \
  --authgroup='vpn_isquad_mfa' \
@@ -166,15 +166,28 @@ function vpn-down() {
     fi
 }
 function unifi() {
-cd /Applications/UniFi.app/Contents/Resources
-java -jar /Applications/UniFi.app/Contents/Resources/lib/ace.jar ui
+ cd /Applications/UniFi.app/Contents/Resources
+ java -jar /Applications/UniFi.app/Contents/Resources/lib/ace.jar ui
 }
 function one() {
-eval $(security find-generic-password -w -s "1password" | op signin grannec)
+ eval $(security find-generic-password -w -s "1password" | op signin grannec)
 }
 function wp-aws() {
-op get totp 'warbyparker aws' | aws-mfa --profile wp
+ op get totp 'warbyparker aws' | aws-mfa --profile wp
 }
+function gs-aws() {
+ if if [ -z "$1" ];
+ then
+   echo "no environment specified - gs-sandbox, gs-preprod, or gs-prod are options"
+ else
+  one
+  TOKEN_SECRET=$(op get totp 'gamestop')
+  PASSWORD=$(op get item gamestop | jq -r '.details.fields[] | select(.designation=="password").value')
+  {printf "$TOKEN_SECRET\n"} | okta-awscli --okta-profile $1 --password $PASSWORD 
+ fi
+}
+
+
 
 export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"
