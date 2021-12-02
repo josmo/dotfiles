@@ -17,7 +17,7 @@
 [credential]
   helper = osxkeychain
 [gpg]
-  program = /usr/local/bin/gpg
+  program = /opt/homebrew/bin/gpg
 # Enforce SSH
 [url "ssh://git@github.com/"]
  insteadOf = https://github.com/

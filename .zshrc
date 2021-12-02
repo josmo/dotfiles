@@ -4,6 +4,9 @@ if type brew &>/dev/null; then
   autoload -Uz compinit
   compinit
 fi
+eval "$(/opt/homebrew/bin/brew shellenv)"
+alias xbrew='arch -x86_64 /usr/local/bin/brew' # X86 Homebrew
+
 
 export PATH=$PATH:/Users/jhill/Library/Android/sdk/platform-tools
 export PATH=$PATH:/Users/jhill/Development/flutter/bin
@@ -84,7 +87,7 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git colored-man-pages colorize github jira vagrant virtualenv pip python brew osx fasd docker kubectl helm)
+plugins=(git colored-man-pages colorize github jira vagrant virtualenv pip python brew macos fasd docker kubectl helm)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -124,14 +127,17 @@ export OPENCONNECT_HOST=`cat $HOME/.local_config/vpn_host`
 
 function vpn-up-gs() {
  one
- TOKEN_SECRET=$(op get totp 'gamestop')
- PASSWORD=$(op get item gamestop | jq -r '.details.fields[] | select(.designation=="password").value')
- { printf "$PASSWORD\n"; sleep 1; printf "$TOKEN_SECRET\n"; } | sudo openconnect \
+ USER=v_jgrannec
+ PASSWORD_ITEM=gamestop
+ TOKEN_SECRET=$(op get totp "$PASSWORD_ITEM")
+ AUTH_GROUP="vpn_isquad_mfa"
+ PASSWORD=$(op get item $PASSWORD_ITEM | jq -r '.details.fields[] | select(.designation=="password").value')
+ { printf "$PASSWORD\n"; sleep 2; printf "$TOKEN_SECRET\n"; } | sudo openconnect \
  --background \
  --pid-file="$HOME/.openconnect.pid" \
- --authgroup='vpn_isquad_mfa' \
+ --authgroup="$AUTH_GROUP" \
  --servercert pin-sha256:J6oHAiOd0dh4B+kgX+GvMIrPmHSR9+N4dGuOOPjeNVg= \
- --user='v_jgrannec' \
+ --user="$USER" \
  --passwd-on-stdin \
  vpn.gamestop.com
 }
@@ -176,18 +182,21 @@ function wp-aws() {
  op get totp 'warbyparker aws' | aws-mfa --profile wp
 }
 function gs-aws() {
- if if [ -z "$1" ];
+ PASSWORD_ITEM=gamestop
+ if [ -z "$1" ];
  then
-   echo "no environment specified - gs-sandbox, gs-preprod, or gs-prod are options"
+   echo "no environment specified - gs-launchpad-sandbox, gs-launchpad-preprod, or gs-launchpad-prod are options"
  else
   one
-  TOKEN_SECRET=$(op get totp 'gamestop')
-  PASSWORD=$(op get item gamestop | jq -r '.details.fields[] | select(.designation=="password").value')
-  {printf "$TOKEN_SECRET\n"} | okta-awscli --okta-profile $1 --password $PASSWORD 
+  TOKEN_SECRET=$(op get totp "$PASSWORD_ITEM")
+  PASSWORD=$(op get item $PASSWORD_ITEM | jq -r '.details.fields[] | select(.designation=="password").value')
+  saml2aws login --skip-prompt --password=$PASSWORD --mfa-token=$TOKEN_SECRET --session-duration=3600  --cache-saml -a $1
  fi
 }
 
-
-
 export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"
+GPG_TTY=$(tty)
+export GPG_TTY
+export THEFUCK_PRIORITY="git_hook_bypass=1100" # remove on update of thefuck https://github.com/nvbn/thefuck/issues/1207 https://github.com/nvbn/thefuck/issues/1238
+
