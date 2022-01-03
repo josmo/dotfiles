@@ -10,6 +10,7 @@ alias xbrew='arch -x86_64 /usr/local/bin/brew' # X86 Homebrew
 
 export PATH=$PATH:/Users/jhill/Library/Android/sdk/platform-tools
 export PATH=$PATH:/Users/jhill/Development/flutter/bin
+export PATH=$PATH:/Users/jhill/bin
 #  export NVM_DIR="$HOME/.nvm"
 #  [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
 #  [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm" 
@@ -145,7 +146,7 @@ function vpn-up-gs() {
 function vpn-up-tmo() {
  one
  SPLIT_COMMAND=""
- 
+ AUTH_GROUP="AnyConnectVIDP"
  if [[ "$1" == "split" ]]
  then
    SPLIT_COMMAND="--script='$HOME/.local_config/vpnc-script.sh'"
@@ -154,6 +155,7 @@ function vpn-up-tmo() {
   op get item tmobile | jq -r '.details.fields[] | select(.designation=="password").value' | sudo openconnect \
   --background \
   --pid-file="$HOME/.openconnect.pid" \
+  --authgroup="$AUTH_GROUP" \
   --user=$OPENCONNECT_USER \
   $SPLIT_COMMAND \
   --useragent='AnyConnect Darwin_x64 3.9.04053' \
@@ -198,5 +200,4 @@ export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"
 GPG_TTY=$(tty)
 export GPG_TTY
-export THEFUCK_PRIORITY="git_hook_bypass=1100" # remove on update of thefuck https://github.com/nvbn/thefuck/issues/1207 https://github.com/nvbn/thefuck/issues/1238
 
