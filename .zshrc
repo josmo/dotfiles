@@ -11,6 +11,7 @@ alias xbrew='arch -x86_64 /usr/local/bin/brew' # X86 Homebrew
 export PATH=$PATH:/Users/jhill/Library/Android/sdk/platform-tools
 export PATH=$PATH:/Users/jhill/Development/flutter/bin
 export PATH=$PATH:/Users/jhill/bin
+export PATH=$PATH:/Library/Java/JavaVirtualMachines/graalvm-ce-java17-22.0.0.2/Contents/Home/bin
 #  export NVM_DIR="$HOME/.nvm"
 #  [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
 #  [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm" 
@@ -130,14 +131,14 @@ function vpn-up-gs() {
  one
  USER=v_jgrannec
  PASSWORD_ITEM=gamestop
- TOKEN_SECRET=$(op get totp "$PASSWORD_ITEM")
+ TOKEN_SECRET=$(op item get "$PASSWORD_ITEM" --field type=otp --format json | jq -r .totp)
  AUTH_GROUP="vpn_isquad_mfa"
- PASSWORD=$(op get item $PASSWORD_ITEM | jq -r '.details.fields[] | select(.designation=="password").value')
+ PASSWORD=$(op item get $PASSWORD_ITEM --format json | jq -r '.fields[] | select(.id=="password").value')
  { printf "$PASSWORD\n"; sleep 2; printf "$TOKEN_SECRET\n"; } | sudo openconnect \
  --background \
  --pid-file="$HOME/.openconnect.pid" \
  --authgroup="$AUTH_GROUP" \
- --servercert pin-sha256:J6oHAiOd0dh4B+kgX+GvMIrPmHSR9+N4dGuOOPjeNVg= \
+ --servercert pin-sha256:+sXpjt6yWirJjr6nKpUQZSD8ssLWacTBcxcs9Y6nf+8= \
  --user="$USER" \
  --passwd-on-stdin \
  vpn.gamestop.com
@@ -152,7 +153,7 @@ function vpn-up-tmo() {
    SPLIT_COMMAND="--script='$HOME/.local_config/vpnc-script.sh'"
  fi
 
-  op get item tmobile | jq -r '.details.fields[] | select(.designation=="password").value' | sudo openconnect \
+  op item get tmobile --format json | jq -r '.fields[] | select(.id=="password").value' | sudo openconnect \
   --background \
   --pid-file="$HOME/.openconnect.pid" \
   --authgroup="$AUTH_GROUP" \
@@ -178,10 +179,10 @@ function unifi() {
  java -jar /Applications/UniFi.app/Contents/Resources/lib/ace.jar ui
 }
 function one() {
- eval $(security find-generic-password -w -s "1password" | op signin grannec)
+ eval $(security find-generic-password -w -s "1password" | op signin --account grannec)
 }
 function wp-aws() {
- op get totp 'warbyparker aws' | aws-mfa --profile wp
+ op item get 'warbyparker aws' --field type=otp --format json | jq -r .totp | aws-mfa --profile wp
 }
 function gs-aws() {
  PASSWORD_ITEM=gamestop
@@ -190,8 +191,8 @@ function gs-aws() {
    echo "no environment specified - gs-launchpad-sandbox, gs-launchpad-preprod, or gs-launchpad-prod are options"
  else
   one
-  TOKEN_SECRET=$(op get totp "$PASSWORD_ITEM")
-  PASSWORD=$(op get item $PASSWORD_ITEM | jq -r '.details.fields[] | select(.designation=="password").value')
+  TOKEN_SECRET=$(op item get "$PASSWORD_ITEM" --field type=otp --format json | jq -r .totp)
+  PASSWORD=$(op item get $PASSWORD_ITEM --format json | jq -r '.fields[] | select(.id=="password").value')
   saml2aws login --skip-prompt --password=$PASSWORD --mfa-token=$TOKEN_SECRET --session-duration=3600  --cache-saml -a $1
  fi
 }
