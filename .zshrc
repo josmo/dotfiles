@@ -123,50 +123,22 @@ alias vault-login="vault login -no-print=true -method=github username=josmo toke
 
 export VAULT_ADDR=https://vault.pelo.tech:8200
 export NPM_TOKEN=`cat $HOME/.local_config/npm_token`
-export OPENCONNECT_USER=`cat $HOME/.local_config/vpn_user`
-export OPENCONNECT_HOST=`cat $HOME/.local_config/vpn_host`
 
 
 function vpn-up-gs() {
  one
- USER=v_jgrannec
+ export GP_OKTA_URL=https://gamestop.okta.com
+ export GP_VPN_URL=https://vpngpao.gamestop.com
+ export GP_GATEWAY_URL=https://vpngpt.gamestop.com
+ export GP_USERNAME=v_jgrannec
  PASSWORD_ITEM=gamestop
- TOKEN_SECRET=$(op item get "$PASSWORD_ITEM" --field type=otp --format json | jq -r .totp)
- AUTH_GROUP="vpn_isquad_mfa"
+ export GP_EXECUTE=1
+ export GP_OPENCONNECT_ARGS="--script \"CISCO_SPLIT_INC='' /opt/homebrew/etc/vpnc-script\" --servercert pin-sha256:Ti6EMFPJjXKbJJmqhVZI6puIRqcX9r+bgxLZIfdR5lw= --pid-file=$HOME/.openconnect.pid --background"
+ TOTP=$(op item get "$PASSWORD_ITEM" --field type=otp --format json | jq -r .totp)
  PASSWORD=$(op item get $PASSWORD_ITEM --format json | jq -r '.fields[] | select(.id=="password").value')
- { printf "$PASSWORD\n"; sleep 2; printf "$TOKEN_SECRET\n"; } | sudo openconnect \
- --background \
- --pid-file="$HOME/.openconnect.pid" \
- --authgroup="$AUTH_GROUP" \
- --servercert pin-sha256:+sXpjt6yWirJjr6nKpUQZSD8ssLWacTBcxcs9Y6nf+8= \
- --user="$USER" \
- --passwd-on-stdin \
- vpn.gamestop.com
+ { sleep 4 ; printf "$TOTP" } | GP_PASSWORD=$PASSWORD CURL_CA_BUNDLE="" python3 $HOME/pan-globalprotect-okta/gp-okta.py $HOME/pan-globalprotect-okta/gp-okta.conf
 }
 
-function vpn-up-tmo() {
- one
- SPLIT_COMMAND=""
- AUTH_GROUP="AnyConnectVIDP"
- if [[ "$1" == "split" ]]
- then
-   SPLIT_COMMAND="--script='$HOME/.local_config/vpnc-script.sh'"
- fi
-
-  op item get tmobile --format json | jq -r '.fields[] | select(.id=="password").value' | sudo openconnect \
-  --background \
-  --pid-file="$HOME/.openconnect.pid" \
-  --authgroup="$AUTH_GROUP" \
-  --user=$OPENCONNECT_USER \
-  $SPLIT_COMMAND \
-  --useragent='AnyConnect Darwin_x64 3.9.04053' \
-  --passwd-on-stdin \
-  $OPENCONNECT_HOST
-}
-
-function vpn-split() {
-  vpn-up-tmo split
-}
 function vpn-down() {
     if [[ -f "$HOME/.openconnect.pid" ]]; then
         sudo kill -2 $(cat "$HOME/.openconnect.pid") && rm -f "$HOME/.openconnect.pid"
