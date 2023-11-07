@@ -7,14 +7,17 @@ fi
 eval "$(/opt/homebrew/bin/brew shellenv)"
 alias xbrew='arch -x86_64 /usr/local/bin/brew' # X86 Homebrew
 
-
+export GOPATH=$HOME/Development/workspace
+export GRAALVM_HOME=/Library/Java/JavaVirtualMachines/graalvm-ce-java17-22.3.1/Contents/Home/
 export PATH=$PATH:/Users/jhill/Library/Android/sdk/platform-tools
 export PATH=$PATH:/Users/jhill/Development/flutter/bin
 export PATH=$PATH:/Users/jhill/bin
-export PATH=$PATH:/Library/Java/JavaVirtualMachines/graalvm-ce-java17-22.0.0.2/Contents/Home/bin
-#  export NVM_DIR="$HOME/.nvm"
-#  [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
-#  [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm" 
+export PATH=$PATH:/Library/Java/JavaVirtualMachines/graalvm-ce-java17-22.3.1/Contents/Home/bin
+export XDG_CONFIG_HOME=$HOME/.config
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
 eval $(thefuck --alias)
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
@@ -89,7 +92,7 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git colored-man-pages colorize github jira vagrant virtualenv pip python brew macos fasd docker kubectl helm)
+plugins=(git colored-man-pages colorize github jira vagrant virtualenv pip python brew macos fasd docker kubectl helm aws fzf npm gradle)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -146,10 +149,6 @@ function vpn-down() {
         echo "openconnect pid file does not exist, probably not running"
     fi
 }
-function unifi() {
- cd /Applications/UniFi.app/Contents/Resources
- java -jar /Applications/UniFi.app/Contents/Resources/lib/ace.jar ui
-}
 function one() {
  eval $(security find-generic-password -w -s "1password" | op signin --account grannec)
 }
@@ -169,8 +168,22 @@ function gs-aws() {
  fi
 }
 
+function kall {
+  for i in $(kubectl api-resources --verbs=list --namespaced -o name | grep -v "events.events.k8s.io" | grep -v "events" | sort | uniq); do
+    echo "Resource:" $i
+    kubectl -n ${1} get --ignore-not-found ${i}
+  done
+}
+
+
 export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"
 GPG_TTY=$(tty)
 export GPG_TTY
 
+source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $HOME/.oh-my-zsh/custom/plugins/fzf-tab-completion/zsh/fzf-zsh-completion.sh
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/Users/jhill/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)

@@ -19,14 +19,10 @@
 [gpg]
   program = /opt/homebrew/bin/gpg
 # Enforce SSH
-[url "ssh://git@github.com/"]
+[url "git@github.com:"]
  insteadOf = https://github.com/
-[url "git@tmo.gitlab.com:tmobile"]
- insteadOf = git@gitlab.com:tmobile
-[url "git@tmo.gitlab.com:JHillgr1"]
- insteadOf = git@gitlab.com:JHillgr1
-[url "git@tmo.gitlab.com:tmobile"]
-  insteadOf = https://gitlab.com/tmobile
+[url "https://github.com/rust-lang/crates.io-index"]
+    insteadOf = https://github.com/rust-lang/crates.io-index
 [alias]
   c = commit
   ca = commit -a
@@ -41,9 +37,14 @@
 [mergetool "sourcetree"]
 	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
-[includeIf "gitdir:**/tmobile/**/.git"]
-  path = .gitconfig.tmo
 [init]
 	defaultBranch = main
 [pull]
 	rebase = false
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[push]
+  autoSetupRemote = true
