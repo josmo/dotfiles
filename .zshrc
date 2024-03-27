@@ -1,8 +1,8 @@
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
 
-  autoload -Uz compinit
-  compinit
+  autoload -Uz +X compinit && compinit
+  autoload -Uz +X bashcompinit && bashcompinit
 fi
 eval "$(/opt/homebrew/bin/brew shellenv)"
 alias xbrew='arch -x86_64 /usr/local/bin/brew' # X86 Homebrew
@@ -12,6 +12,7 @@ export GRAALVM_HOME=/Library/Java/JavaVirtualMachines/graalvm-ce-java17-22.3.1/C
 export PATH=$PATH:/Users/jhill/Library/Android/sdk/platform-tools
 export PATH=$PATH:/Users/jhill/Development/flutter/bin
 export PATH=$PATH:/Users/jhill/bin
+export PATH=$PATH:~/.jetbrains
 export PATH=$PATH:/Library/Java/JavaVirtualMachines/graalvm-ce-java17-22.3.1/Contents/Home/bin
 export XDG_CONFIG_HOME=$HOME/.config
 export NVM_DIR="$HOME/.nvm"
@@ -122,50 +123,9 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias stree='/Applications/SourceTree.app/Contents/Resources/stree'
-alias vault-login="vault login -no-print=true -method=github username=josmo token=`cat $HOME/.local_config/github_token`"
 
-export VAULT_ADDR=https://vault.pelo.tech:8200
-export NPM_TOKEN=`cat $HOME/.local_config/npm_token`
-
-
-function vpn-up-gs() {
- one
- export GP_OKTA_URL=https://gamestop.okta.com
- export GP_VPN_URL=https://vpngpao.gamestop.com
- export GP_GATEWAY_URL=https://vpngpt.gamestop.com
- export GP_USERNAME=v_jgrannec
- PASSWORD_ITEM=gamestop
- export GP_EXECUTE=1
- export GP_OPENCONNECT_ARGS="--script \"CISCO_SPLIT_INC='' /opt/homebrew/etc/vpnc-script\" --servercert pin-sha256:Ti6EMFPJjXKbJJmqhVZI6puIRqcX9r+bgxLZIfdR5lw= --pid-file=$HOME/.openconnect.pid --background"
- TOTP=$(op item get "$PASSWORD_ITEM" --field type=otp --format json | jq -r .totp)
- PASSWORD=$(op item get $PASSWORD_ITEM --format json | jq -r '.fields[] | select(.id=="password").value')
- { sleep 4 ; printf "$TOTP" } | GP_PASSWORD=$PASSWORD CURL_CA_BUNDLE="" python3 $HOME/pan-globalprotect-okta/gp-okta.py $HOME/pan-globalprotect-okta/gp-okta.conf
-}
-
-function vpn-down() {
-    if [[ -f "$HOME/.openconnect.pid" ]]; then
-        sudo kill -2 $(cat "$HOME/.openconnect.pid") && rm -f "$HOME/.openconnect.pid"
-    else
-        echo "openconnect pid file does not exist, probably not running"
-    fi
-}
 function one() {
  eval $(security find-generic-password -w -s "1password" | op signin --account grannec)
-}
-function wp-aws() {
- op item get 'warbyparker aws' --field type=otp --format json | jq -r .totp | aws-mfa --profile wp
-}
-function gs-aws() {
- PASSWORD_ITEM=gamestop
- if [ -z "$1" ];
- then
-   echo "no environment specified - gs-launchpad-sandbox, gs-launchpad-preprod, or gs-launchpad-prod are options"
- else
-  one
-  TOKEN_SECRET=$(op item get "$PASSWORD_ITEM" --field type=otp --format json | jq -r .totp)
-  PASSWORD=$(op item get $PASSWORD_ITEM --format json | jq -r '.fields[] | select(.id=="password").value')
-  saml2aws login --skip-prompt --password=$PASSWORD --mfa-token=$TOKEN_SECRET --session-duration=3600  --cache-saml -a $1
- fi
 }
 
 function kall {
@@ -184,6 +144,3 @@ export GPG_TTY
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOME/.oh-my-zsh/custom/plugins/fzf-tab-completion/zsh/fzf-zsh-completion.sh
 
-### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
-export PATH="/Users/jhill/.rd/bin:$PATH"
-### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
