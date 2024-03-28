@@ -123,6 +123,8 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias stree='/Applications/SourceTree.app/Contents/Resources/stree'
+alias vim="nvim"
+alias vi="nvim"
 
 function one() {
  eval $(security find-generic-password -w -s "1password" | op signin --account grannec)
@@ -143,4 +145,4 @@ export GPG_TTY
 
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOME/.oh-my-zsh/custom/plugins/fzf-tab-completion/zsh/fzf-zsh-completion.sh
-
+source <(switcher init zsh)
