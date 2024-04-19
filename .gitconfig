@@ -1,7 +1,7 @@
 [user]
   name = Joachim Hill-Grannec
   email = joachim.hill@gmail.com
-  signingkey = ~/.ssh/id_rsa.pub
+  signingkey = ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCldlWBOrX4Fp+DcVdvLVnFIMUeDHBWkDL/yZLs+ZYbjVr3ckze4vKfh6MgzZd4HhLbgnNsO/U9vCWyUe5igogM/7VPiX+dxB15zySZ1vitwLMMCy8sPoeVhhXEEXamekwS+fRK3WzjojsMvNaFXHeVolbvssCPzXQPqOtxFCjVhqvqtz0CYofpNnTopxBldoaKCJyk1BY3iQuMZJsFuL4eY/GUTUHXLuFcgWXQ7ZEIpQNXBEP5Tej4jIFhnIDk+61dXJDFQLF7DC6h74ziF7N6w3+HhSxR3ClC6PmmnS1Ecsf9jczL8LvtSq6YUaJIzL7Bm9azQyD5qK+l+ygtTAKbbdAlqzDq8iOYSrD9D9ObnkAmfCkd9LIXYcBhPoFGjcCwGUpn6LUwVBeNHJCY95iJBA8vja5mVANdfpTg6+r7txTjhdsqXF26p19fpk3gPp6pal7pDZJp9V6AXKUx2IYIvNxmdfa1vNu2pkkq81peJGEFKV/f30ISa3JAhUTLYseAu80/1BQrObgBTDtAJLiEPHAeKtg3ZwovRcqRJPZ5AyrKbOVzrkGp2cZxSkv1Gnz49Yb9CRUXlb0U2ZVw4QCVXod1UjsWip72T0ctaYP0hR+k4c+m7w7xXoB8IH6Fh0Egu8lvjOngqaZ+zF9vOp5XTmtUtOxAf+gZlERKeUEayw==
 [core]
   editor = vim
   excludesfile = /Users/jhill/.gitignore_global
