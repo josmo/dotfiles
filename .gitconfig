@@ -1,14 +1,14 @@
 [user]
   name = Joachim Hill-Grannec
   email = joachim.hill@gmail.com
-  signingkey = 4391E44ED5D6BB46
+  signingkey = ~/.ssh/id_rsa.pub
 [core]
   editor = vim
-	excludesfile = /Users/jhill/.gitignore_global
+  excludesfile = /Users/jhill/.gitignore_global
   autocrlf = input
 [commit]
   gpgsign = true
-	template = /Users/jhill/.stCommitMsg
+  template = /Users/jhill/.stCommitMsg
 [color]
   branch = auto
   diff = auto
@@ -17,12 +17,12 @@
 [credential]
   helper = osxkeychain
 [gpg]
-  program = /opt/homebrew/bin/gpg
+  format = ssh
 # Enforce SSH
 [url "git@github.com:"]
- insteadOf = https://github.com/
+  insteadOf = https://github.com/
 [url "https://github.com/rust-lang/crates.io-index"]
-    insteadOf = https://github.com/rust-lang/crates.io-index
+  insteadOf = https://github.com/rust-lang/crates.io-index
 [alias]
   c = commit
   ca = commit -a
@@ -32,19 +32,19 @@
   dc = diff --cached
   l = log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit
 [difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
+  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+  path = 
 [mergetool "sourcetree"]
-	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+  cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+  trustExitCode = true
 [init]
-	defaultBranch = main
+  defaultBranch = main
 [pull]
-	rebase = false
+  rebase = false
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
 [push]
   autoSetupRemote = true
