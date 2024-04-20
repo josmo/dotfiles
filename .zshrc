@@ -5,6 +5,8 @@ autoload -Uz +X compinit && compinit
 autoload -Uz +X bashcompinit && bashcompinit
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
+export SOPS_AGE_KEY=$(tail -1 ~/.config/sops/age/keys.txt)
+launchctl setenv SOPS_AGE_KEY $SOPS_AGE_KEY
 export GOPATH=$HOME/Development/workspace
 export GRAALVM_HOME=/Library/Java/JavaVirtualMachines/graalvm-ce-java17-22.3.1/Contents/Home/
 export PATH=$PATH:$HOME/Library/Android/sdk/platform-tools
