@@ -27,9 +27,5 @@ set visualbell          " but leave on a visual bell
 set hlsearch            " highlighted search results
 set showmatch           " show matching bracket
 
-" other
-set guioptions=aAace    " don't show scrollbar in MacVim
-" call pathogen#infect()  " use pathogen
-
 " clipboard
 set clipboard=unnamed   " allow yy, etc. to interact with OS X clipboard

@@ -1,0 +1,4 @@
+# nix-direnv 3.2.0 touches flake-profile-*.rc on every cache hit, which makes 
+# multiple shells in one dir reload each other forever (nix-direnv #786).
+# Upstream removed this in master; no-op it until 3.3 lands in nixpkgs.
+_nix_refresh_gcroots() { :; } 

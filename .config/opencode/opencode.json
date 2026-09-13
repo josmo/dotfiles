@@ -1,0 +1,30 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "@jannniiiii/opencode-claude-skill-sync",
+    "@ex-machina/opencode-anthropic-auth"
+  ],
+  "permission": {
+    "skill": {
+      "*": "allow"
+    }
+  },
+  "disabled_providers": [],
+  "provider": {
+    "ollama": {
+      "name": "Ollama",
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "http://localhost:11434/v1"
+      },
+      "models": {
+        "qwen3-coder-next:q8_0": {
+          "name": "qwen3-coder-next:q8_0"
+        },
+        "gemma4:31b": {
+          "name": "gemma4:31b"
+        }
+      }
+    }
+  }
+}

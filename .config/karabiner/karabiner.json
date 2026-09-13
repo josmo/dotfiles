@@ -1,0 +1,29 @@
+{
+    "profiles": [
+        {
+            "complex_modifications": {
+                "rules": [
+                    {
+                        "description": "YouTube Music: Smart Launch and Toggle",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "f8",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    { "shell_command": "pgrep -f 'YouTube Music' > /dev/null || (open -a 'YouTube Music' && sleep 5 && osascript -e 'tell application \"System Events\" to tell process \"YouTube Music\" to keystroke space' && sleep 5)" },
+                                    { "consumer_key_code": "play_or_pause" }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "name": "Default profile",
+            "selected": true,
+            "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
+        }
+    ]
+}

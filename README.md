@@ -1,7 +1,20 @@
-# geerlingguy's dotfiles
+# dotfiles
 
-My configuration. Minimalist, but helps save a few thousand keystrokes a day. I use Mac OS X, so I can only guarantee they'll work with OS X, but I use some of these dotfiles on various linux servers, and they seem to be pretty flexible.
+Shell, git, editor, and tool config for my Mac. Linked into `$HOME` by
+[nix-darwin](https://github.com/josmo/nix-darwin) on every `darwin-rebuild switch`.
 
-## License
+## How linking works
 
-MIT / BSD
+The activation script runs `git ls-files` in this repo and symlinks every
+tracked path that starts with a dot, except `.gitignore`, to the same path
+under `$HOME`. Nested paths like `.config/direnv/direnvrc` are linked as
+individual files, never whole directories, so caches and tokens stay out of git.
+
+- **Add a file:** put it at the path it should have under `$HOME`, then `git add` it.
+- **Remove a file:** `git rm` it. The stale symlink is pruned on the next activation.
+- Untracked and ignored files are never linked.
+
+## Never commit
+
+Anything with a credential in it: `.npmrc`, `.netrc`, `.config/gh/hosts.yml`,
+`.config/sops/`, `.aws/`, `.kube/`, and so on. Those stay unmanaged in `$HOME`.
