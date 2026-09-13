@@ -1,0 +1,8 @@
+name: hookify
+version: 3deb821-apm1
+description: >-
+  Vendored copy of anthropics/claude-plugins-official/plugins/hookify with the
+  `core/` package placed inside `hooks/` so APM-deployed hook scripts can import it
+  (works around microsoft/apm#2824). Refresh from upstream when hookify changes.
+author: Anthropic (vendored by Joachim Hill-Grannec)
+type: hybrid

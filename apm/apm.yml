@@ -1,0 +1,55 @@
+name: global-agent-setup
+version: 1.0.0
+description: Reproducible Claude Code plugin/skill set managed by APM
+author: Joachim Hill-Grannec
+# Which agent platforms to deploy to.
+# Accepted values: agent-skills, antigravity, claude, codex, copilot, cursor, gemini, grok-build, kiro, opencode, vscode, windsurf
+targets:
+  - claude
+  - opencode
+  - antigravity
+dependencies:
+  apm:
+    # --- superpowers (obra) ---
+    - obra/superpowers
+    # --- anthropics/claude-plugins-official ---
+    - anthropics/claude-plugins-official/plugins/frontend-design
+    - anthropics/claude-plugins-official/plugins/code-review
+    - anthropics/claude-plugins-official/plugins/feature-dev
+    - anthropics/claude-plugins-official/plugins/code-simplifier
+    - anthropics/claude-plugins-official/plugins/security-guidance
+    - anthropics/claude-plugins-official/plugins/claude-md-management
+    - anthropics/claude-plugins-official/plugins/pr-review-toolkit
+    - anthropics/claude-plugins-official/plugins/claude-code-setup
+    - anthropics/claude-plugins-official/plugins/skill-creator
+    # hookify: vendored under ./packages with core/ inside hooks/ so APM-deployed
+    # hook scripts can import it (upstream bug microsoft/apm#2824). Refresh from
+    # anthropics/claude-plugins-official/plugins/hookify when it changes.
+    - ~/.apm/packages/hookify  # must be absolute or ~/ at user scope (--global)
+    - anthropics/claude-plugins-official/external_plugins/context7
+    - anthropics/claude-plugins-official/external_plugins/github
+    - anthropics/claude-plugins-official/external_plugins/playwright
+    - anthropics/claude-plugins-official/external_plugins/gitlab
+    # --- vendor plugins referenced by the official marketplace ---
+    # NOTE: typescript-lsp (LSP-only, no plugin manifest) and slackapi/slack-mcp-plugin
+    # (uses claude-code-plugin-manifest $schema, rejected by APM 0.29) are excluded.
+    # stripe/ai/providers/claude/plugin is excluded too: its hooks put the script path
+    # in an "args" array, which APM 0.29 does not rewrite, so ${CLAUDE_PLUGIN_ROOT}
+    # leaks into ~/.claude/settings.json and Claude Code rejects the hooks.
+    - figma/mcp-server-guide
+    - supabase-community/supabase-plugin
+    - huggingface/skills
+    # --- VoltAgent subagent collections ---
+    - voltagent/awesome-claude-code-subagents/categories/01-core-development
+    - voltagent/awesome-claude-code-subagents/categories/02-language-specialists
+    - voltagent/awesome-claude-code-subagents/categories/03-infrastructure
+    - voltagent/awesome-claude-code-subagents/categories/05-data-ai
+    - voltagent/awesome-claude-code-subagents/categories/07-specialized-domains
+    - voltagent/awesome-claude-code-subagents/categories/08-business-product
+    - voltagent/awesome-claude-code-subagents/categories/09-meta-orchestration
+    - voltagent/awesome-claude-code-subagents/categories/10-research-analysis
+    # --- context-mode ---
+    - mksglu/context-mode
+  mcp: []
+includes: auto
+scripts: {}

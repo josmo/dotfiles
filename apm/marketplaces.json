@@ -1,0 +1,53 @@
+{
+  "marketplaces": [
+    {
+      "name": "claude-plugins-official",
+      "url": "https://github.com/anthropics/claude-plugins-official",
+      "path": ".claude-plugin/marketplace.json",
+      "owner": "anthropics",
+      "repo": "claude-plugins-official"
+    },
+    {
+      "name": "superpowers-marketplace",
+      "url": "https://github.com/obra/superpowers-marketplace",
+      "path": ".claude-plugin/marketplace.json",
+      "owner": "obra",
+      "repo": "superpowers-marketplace"
+    },
+    {
+      "name": "anthropic-agent-skills",
+      "url": "https://github.com/anthropics/skills",
+      "path": ".claude-plugin/marketplace.json",
+      "owner": "anthropics",
+      "repo": "skills"
+    },
+    {
+      "name": "voltagent-subagents",
+      "url": "https://github.com/VoltAgent/awesome-claude-code-subagents",
+      "path": ".claude-plugin/marketplace.json",
+      "owner": "VoltAgent",
+      "repo": "awesome-claude-code-subagents"
+    },
+    {
+      "name": "context-mode",
+      "url": "https://github.com/mksglu/context-mode",
+      "path": ".claude-plugin/marketplace.json",
+      "owner": "mksglu",
+      "repo": "context-mode"
+    },
+    {
+      "name": "knowledge-work-plugins",
+      "url": "https://github.com/anthropics/knowledge-work-plugins",
+      "path": ".claude-plugin/marketplace.json",
+      "owner": "anthropics",
+      "repo": "knowledge-work-plugins"
+    },
+    {
+      "name": "pelotech-plugins",
+      "url": "https://github.com/pelotech/claude-plugins",
+      "path": ".claude-plugin/marketplace.json",
+      "owner": "pelotech",
+      "repo": "claude-plugins"
+    }
+  ]
+}

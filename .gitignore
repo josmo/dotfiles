@@ -3,3 +3,6 @@
 Thumbs.db
 .bundle
 .idea
+apm/apm_modules/
+apm/cache/
+apm/marketplaces.lock
