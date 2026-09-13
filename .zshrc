@@ -15,8 +15,9 @@ export PATH=$PATH:$HOME/bin
 export PATH=$PATH:$HOME/.jetbrains
 export PATH=$PATH:/Library/Java/JavaVirtualMachines/graalvm-ce-java17-22.3.1/Contents/Home/bin
 export XDG_CONFIG_HOME=$HOME/.config
-export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+alias kfilt="kubectl kfilt"
+eval "$(fnm env --use-on-cd)"
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
@@ -143,10 +144,10 @@ eval "$(jenv init -)"
 GPG_TTY=$(tty)
 export GPG_TTY
 
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOME/.oh-my-zsh/custom/plugins/fzf-tab-completion/zsh/fzf-zsh-completion.sh
-source <(switcher init zsh)
 
+source $HOME/.tenv.completion.zsh
+. "/Users/jhill/.deno/env"
 # BEGIN_AWS_SSO_CLI
 
 # AWS SSO requires `bashcompinit` which needs to be enabled once and
@@ -161,17 +162,61 @@ source <(switcher init zsh)
 
 __aws_sso_profile_complete() {
      local _args=${AWS_SSO_HELPER_ARGS:- -L error}
-    _multi_parts : "($(/opt/homebrew/bin/aws-sso ${=_args} list --csv Profile))"
+    _multi_parts : "($(/nix/store/r8z4cb7nwqdpgn6mlknqlikjshm0wgvr-aws-sso-cli-2.3.2/bin/.aws-sso-wrapped ${=_args} list --csv Profile))"
 }
 
 aws-sso-profile() {
     local _args=${AWS_SSO_HELPER_ARGS:- -L error}
+    local _sso=""
+    local _profile=""
+
     if [ -n "$AWS_PROFILE" ]; then
         echo "Unable to assume a role while AWS_PROFILE is set"
         return 1
     fi
-    eval $(/opt/homebrew/bin/aws-sso ${=_args} eval -p "$1")
-    if [ "$AWS_SSO_PROFILE" != "$1" ]; then
+
+    # Parse arguments
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            -S|--sso)
+                shift
+                if [ -z "$1" ]; then
+                    echo "Error: -S/--sso requires an argument"
+                    return 1
+                fi
+                _sso="$1"
+                shift
+                ;;
+            -*)
+                echo "Unknown option: $1"
+                echo "Usage: aws-sso-profile [-S|--sso <sso-instance>] <profile>"
+                return 1
+                ;;
+            *)
+                if [ -z "$_profile" ]; then
+                    _profile="$1"
+                else
+                    echo "Error: Multiple profiles specified"
+                    return 1
+                fi
+                shift
+                ;;
+        esac
+    done
+
+    if [ -z "$_profile" ]; then
+        echo "Usage: aws-sso-profile [-S|--sso <sso-instance>] <profile>"
+        return 1
+    fi
+
+    # Build and execute the eval command with optional SSO flag
+    if [ -n "$_sso" ]; then
+        eval $(/nix/store/r8z4cb7nwqdpgn6mlknqlikjshm0wgvr-aws-sso-cli-2.3.2/bin/.aws-sso-wrapped ${=_args} -S "$_sso" eval -p "$_profile")
+    else
+        eval $(/nix/store/r8z4cb7nwqdpgn6mlknqlikjshm0wgvr-aws-sso-cli-2.3.2/bin/.aws-sso-wrapped ${=_args} eval -p "$_profile")
+    fi
+
+    if [ "$AWS_SSO_PROFILE" != "$_profile" ]; then
         return 1
     fi
 }
@@ -182,10 +227,72 @@ aws-sso-clear() {
         echo "AWS_SSO_PROFILE is not set"
         return 1
     fi
-    eval $(/opt/homebrew/bin/aws-sso ${=_args} eval -c)
+    eval $(/nix/store/r8z4cb7nwqdpgn6mlknqlikjshm0wgvr-aws-sso-cli-2.3.2/bin/.aws-sso-wrapped ${=_args} eval -c)
 }
 
 compdef __aws_sso_profile_complete aws-sso-profile
-complete -C /opt/homebrew/bin/aws-sso aws-sso
+complete -C /nix/store/r8z4cb7nwqdpgn6mlknqlikjshm0wgvr-aws-sso-cli-2.3.2/bin/.aws-sso-wrapped aws-sso
 
 # END_AWS_SSO_CLI
+
+# Added by Antigravity
+export PATH="/Users/jhill/.antigravity/antigravity/bin:$PATH"
+
+# pnpm
+export PNPM_HOME="/Users/jhill/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+export PATH="/opt/homebrew/opt/gnu-getopt/bin:$PATH"
+
+# ==========================================
+# MLX-LM Model Management for OpenCode
+# ==========================================
+
+# 1. Safety stop function
+stop_mlx() {
+    echo "Stopping any running MLX-LM servers to free up unified memory..."
+    # Suppress the kill error if no process is found
+    pkill -f "mlx_lm.server" 2>/dev/null && echo "Memory cleared." || echo "No server currently running."
+}
+
+# 2. Start Qwen 32B (The Daily Driver)
+start_qwen() {
+    stop_mlx
+    echo "Starting Qwen2.5-Coder 32B (32k context)..."
+    nohup mlx_lm.server --model mlx-community/Qwen2.5-Coder-32B-Instruct-4bit --port 8080 > /tmp/mlx_server.log 2>&1 &
+
+    echo "Server spinning up. Tailing logs..."
+    echo "(Press Ctrl+C to exit the log view. The server will keep running in the background.)"
+    sleep 2
+    tail -f /tmp/mlx_server.log
+}
+
+# 3. Start Mixtral 8x7B (The Fast Alternative)
+start_mixtral() {
+    stop_mlx
+    echo "Starting Mixtral 8x7B Instruct (32k context)..."
+    nohup mlx_lm.server --model mlx-community/Mixtral-8x7B-Instruct-v0.1-4bit --port 8080 > /tmp/mlx_server.log 2>&1 &
+
+    echo "Server spinning up. Tailing logs..."
+    echo "(Press Ctrl+C to exit the log view. The server will keep running in the background.)"
+    sleep 2
+    tail -f /tmp/mlx_server.log
+}
+
+# 4. Start Llama 3.1 70B (The Heavyweight)
+start_llama() {
+    stop_mlx
+    echo "Starting Llama 3.1 70B (8k context limit)..."
+    echo "WARNING: This will consume ~48GB of RAM. Close Docker/heavy browsers if possible."
+    nohup mlx_lm.server --model mlx-community/Meta-Llama-3.1-70B-Instruct-4bit --port 8080 > /tmp/mlx_server.log 2>&1 &
+
+    echo "Server spinning up. Tailing logs..."
+    echo "(Press Ctrl+C to exit the log view. The server will keep running in the background.)"
+    sleep 2
+    tail -f /tmp/mlx_server.log
+}
+
+

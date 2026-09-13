@@ -1,14 +1,14 @@
 [user]
-  name = Joachim Hill-Grannec
-  email = joachim.hill@gmail.com
-  signingkey = ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCldlWBOrX4Fp+DcVdvLVnFIMUeDHBWkDL/yZLs+ZYbjVr3ckze4vKfh6MgzZd4HhLbgnNsO/U9vCWyUe5igogM/7VPiX+dxB15zySZ1vitwLMMCy8sPoeVhhXEEXamekwS+fRK3WzjojsMvNaFXHeVolbvssCPzXQPqOtxFCjVhqvqtz0CYofpNnTopxBldoaKCJyk1BY3iQuMZJsFuL4eY/GUTUHXLuFcgWXQ7ZEIpQNXBEP5Tej4jIFhnIDk+61dXJDFQLF7DC6h74ziF7N6w3+HhSxR3ClC6PmmnS1Ecsf9jczL8LvtSq6YUaJIzL7Bm9azQyD5qK+l+ygtTAKbbdAlqzDq8iOYSrD9D9ObnkAmfCkd9LIXYcBhPoFGjcCwGUpn6LUwVBeNHJCY95iJBA8vja5mVANdfpTg6+r7txTjhdsqXF26p19fpk3gPp6pal7pDZJp9V6AXKUx2IYIvNxmdfa1vNu2pkkq81peJGEFKV/f30ISa3JAhUTLYseAu80/1BQrObgBTDtAJLiEPHAeKtg3ZwovRcqRJPZ5AyrKbOVzrkGp2cZxSkv1Gnz49Yb9CRUXlb0U2ZVw4QCVXod1UjsWip72T0ctaYP0hR+k4c+m7w7xXoB8IH6Fh0Egu8lvjOngqaZ+zF9vOp5XTmtUtOxAf+gZlERKeUEayw==
+	name = Joachim Hill-Grannec
+	email = joachim.hill@gmail.com
+  signingkey = /Users/jhill/.ssh/id_rsa.pub
 [core]
   editor = vim
-  excludesfile = /Users/jhill/.gitignore_global
+	excludesfile = /Users/jhill/.gitignore_global
   autocrlf = input
 [commit]
   gpgsign = true
-  template = /Users/jhill/.stCommitMsg
+	template = /Users/jhill/.stCommitMsg
 [color]
   branch = auto
   diff = auto
@@ -32,19 +32,26 @@
   dc = diff --cached
   l = log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit
 [difftool "sourcetree"]
-  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-  path = 
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
 [mergetool "sourcetree"]
-  cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-  trustExitCode = true
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
 [init]
   defaultBranch = main
 [pull]
   rebase = false
-[filter "lfs"]
-  clean = git-lfs clean -- %f
-  smudge = git-lfs smudge -- %f
-  process = git-lfs filter-process
-  required = true
 [push]
   autoSetupRemote = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[diff "sopsdiffer"]
+	textconv = sops -d
+[credential "https://git.heroku.com"]
+	helper = !heroku git:credentials
+
+[includeIf "gitdir:~/Development/workspace/src/gitlab.apkudo.com/"]
+	path = ~/.config/git/gitlab-apkudo.inc
