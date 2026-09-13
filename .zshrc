@@ -1,9 +1,6 @@
-if type brew &>/dev/null; then
-  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-fi
-autoload -Uz +X compinit && compinit
-autoload -Uz +X bashcompinit && bashcompinit
 eval "$(/opt/homebrew/bin/brew shellenv)"
+# Keep nix-darwin packages ahead of Homebrew (brew shellenv prepends /opt/homebrew/bin).
+export PATH="/run/current-system/sw/bin:$PATH"
 
 export SOPS_AGE_KEY=$(tail -1 ~/.config/sops/age/keys.txt)
 launchctl setenv SOPS_AGE_KEY $SOPS_AGE_KEY
@@ -148,6 +145,9 @@ source $HOME/.oh-my-zsh/custom/plugins/fzf-tab-completion/zsh/fzf-zsh-completion
 
 source $HOME/.tenv.completion.zsh
 . "/Users/jhill/.deno/env"
+
+# oh-my-zsh already ran compinit; aws-sso-cli's bash-style completion needs bashcompinit too.
+autoload -Uz +X bashcompinit && bashcompinit
 # BEGIN_AWS_SSO_CLI
 
 # AWS SSO requires `bashcompinit` which needs to be enabled once and
