@@ -89,7 +89,7 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git colored-man-pages colorize github jira vagrant virtualenv pip python brew macos fasd docker kubectl helm aws fzf npm gradle)
+plugins=(git colored-man-pages colorize gh jira vagrant virtualenv pip python brew macos fasd docker kubectl helm aws fzf npm gradle)
 
 source $ZSH/oh-my-zsh.sh
 

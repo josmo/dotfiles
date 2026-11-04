@@ -1,0 +1,4 @@
+# Paths (bash globs, * spans /) that link-dotfiles.sh copies into $HOME instead of
+# symlinking. Needed where a tool refuses symlinks (apm). Repo wins on every run.
+.apm/*
+.config/opencode/opencode.json
