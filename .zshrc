@@ -118,7 +118,8 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias stree='/Applications/SourceTree.app/Contents/Resources/stree'
+# SourceGit only opens a repo when given a path; default to the current dir like Sourcetree's stree did
+function stree { sourcegit "${${1:-$PWD}:A}" &>/dev/null &! }
 alias vim="nvim"
 alias vi="nvim"
 
