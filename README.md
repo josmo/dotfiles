@@ -18,3 +18,31 @@ individual files, never whole directories, so caches and tokens stay out of git.
 
 Anything with a credential in it: `.npmrc`, `.netrc`, `.config/gh/hosts.yml`,
 `.config/sops/`, `.aws/`, `.kube/`, and so on. Those stay unmanaged in `$HOME`.
+
+## Agent instructions
+
+Personal instructions for coding agents (Claude, OpenCode, Antigravity) are plain markdown
+in `.config/agents/`:
+
+| File | What | Who reads it |
+|------|------|--------------|
+| `core.md` | Principles, stack, commits, style | Every agent, on the Mac and in sandboxes |
+| `host.md` | Tool preferences for this Mac (MCP servers, IntelliJ, aws-sso) | Agents on the Mac |
+| `sandbox.md` | Sandbox notes | Every agent in [smolbento sandboxes](https://github.com/josmo/nix-darwin/tree/main/sandbox) |
+
+Each agent is pointed at them its own way:
+
+- **Claude:** `.claude/CLAUDE.md` imports them (`@~/.config/agents/core.md`, …).
+- **OpenCode:** the `instructions` list in `.config/opencode/opencode.json`.
+- **Antigravity:** symlinks in `.gemini/config/rules/`. Antigravity doesn't follow `@`
+  imports, and loads a rule only with `trigger: always_on` frontmatter, which is why
+  `core.md` and `host.md` start with it.
+
+**Private notes** (client orgs, Slack server names, anything personal) never go in this
+public repo. They live in `~/.claude/CLAUDE.private.md`, which every agent above also reads
+when it exists. Give it the same `trigger: always_on` frontmatter, and link it for
+Antigravity once: `ln -s ~/.claude/CLAUDE.private.md ~/.gemini/config/rules/private.md`.
+
+**Why plain files and not APM:** APM manages plugins (skills, agents, hooks) in `.apm/`.
+Instructions are a few markdown files every agent reads directly, so a package manager adds
+nothing.
