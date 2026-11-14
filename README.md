@@ -1,7 +1,7 @@
 # dotfiles
 
 Shell, git, editor, and tool config for my Mac. Linked into `$HOME` by
-[nix-darwin](https://github.com/josmo/nix-darwin) on every `darwin-rebuild switch`.
+[nix-darwin](https://github.com/josmo/nix-darwin-config) on every `darwin-rebuild switch`.
 
 ## How linking works
 
@@ -28,7 +28,6 @@ in `.config/agents/`:
 |------|------|--------------|
 | `core.md` | Principles, stack, commits, style | Every agent, on the Mac and in sandboxes |
 | `host.md` | Tool preferences for this Mac (MCP servers, IntelliJ, aws-sso) | Agents on the Mac |
-| `sandbox.md` | Sandbox notes | Every agent in [smolbento sandboxes](https://github.com/josmo/nix-darwin/tree/main/sandbox) |
 
 Each agent is pointed at them its own way:
 
@@ -37,11 +36,17 @@ Each agent is pointed at them its own way:
 - **Antigravity:** symlinks in `.gemini/config/rules/`. Antigravity doesn't follow `@`
   imports, and loads a rule only with `trigger: always_on` frontmatter, which is why
   `core.md` and `host.md` start with it.
+- **[`sandbox`](https://github.com/josmo/nix-darwin-config/tree/main/sandbox):** joins every
+  `.md` in `.config/sandbox/instructions/`, in name order, after its own sandbox notes:
+  `10-core.md` (a symlink to `core.md`) and `20-host.md` (host tools that aren't in the VM).
+  `host.md` stays out.
 
 **Private notes** (client orgs, Slack server names, anything personal) never go in this
 public repo. They live in `~/.claude/CLAUDE.private.md`, which every agent above also reads
 when it exists. Give it the same `trigger: always_on` frontmatter, and link it for
-Antigravity once: `ln -s ~/.claude/CLAUDE.private.md ~/.gemini/config/rules/private.md`.
+Antigravity and `sandbox` once:
+`ln -s ~/.claude/CLAUDE.private.md ~/.gemini/config/rules/private.md` and
+`ln -s ~/.claude/CLAUDE.private.md ~/.config/sandbox/instructions/90-private.md`.
 
 **Why plain files and not APM:** APM manages plugins (skills, agents, hooks) in `.apm/`.
 Instructions are a few markdown files every agent reads directly, so a package manager adds
