@@ -26,8 +26,12 @@ in `.config/agents/`:
 
 | File | What | Who reads it |
 |------|------|--------------|
-| `core.md` | Principles, stack, commits, style | Every agent, on the Mac and in sandboxes |
-| `host.md` | Tool preferences for this Mac (MCP servers, IntelliJ, aws-sso) | Agents on the Mac |
+| `core.md` | Practices by area (principles, flow, infrastructure, platform, development, product), repo modes, and the keep-current rule | Every agent, on the Mac and in sandboxes |
+| `host.md` | Tool preferences for this Mac (MCP servers, IntelliJ) | Agents on the Mac |
+
+`core.md` names the owned orgs (`pelotech`, `josmo`), where agents improve as they go. Every
+other repo is treated as a client repo: match its patterns and suggest improvements. Agents
+propose edits to these files when they spot a gap; they never edit them silently.
 
 Each agent is pointed at them its own way:
 
@@ -41,7 +45,7 @@ Each agent is pointed at them its own way:
   `10-core.md` (a symlink to `core.md`) and `20-host.md` (host tools that aren't in the VM).
   `host.md` stays out.
 
-**Private notes** (client orgs, Slack server names, anything personal) never go in this
+**Private notes** (client org names, Slack server names, anything personal) never go in this
 public repo. They live in `~/.claude/CLAUDE.private.md`, which every agent above also reads
 when it exists. Give it the same `trigger: always_on` frontmatter, and link it for
 Antigravity and `sandbox` once:

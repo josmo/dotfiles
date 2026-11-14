@@ -168,7 +168,6 @@ source $HOME/.oh-my-zsh/custom/plugins/fzf-tab-completion/zsh/fzf-zsh-completion
 
 # Generate tenv completion at startup instead of tracking a generated file.
 command -v tenv >/dev/null && source <(tenv completion zsh)
-[ -f "$HOME/.deno/env" ] && . "$HOME/.deno/env"
 
 # oh-my-zsh already ran compinit; aws-sso-cli's bash-style completion needs bashcompinit too.
 autoload -Uz +X bashcompinit && bashcompinit
