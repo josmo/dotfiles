@@ -3,31 +3,69 @@ trigger: always_on
 ---
 # 🌐 Home Ops
 
-Source of truth for environment standards and engineering philosophy. **Keep it simple, easy to understand, and concise.**
+Source of truth for engineering practices, by area. **Keep it simple, easy to understand, and concise.**
 
-## 🛠 Tech Stack
+## 🎯 Principles
 
-* **Infrastructure:** AWS (AL2023, EKS), GCP (GKE).
-* **Languages:** Go, Node.js, Deno, Java, Rust.
-* **IaC & Automation:** Terraform, Packer, GitHub Actions.
-* **CLIs:** `aws-sso-cli`, `kubeswitch`, `fpm`.
-* **Maintenance:** Renovate (dependency updates).
+* **KISS:** Avoid over-engineering. If a shell script works, don't build a microservice.
+* **Cattle, not pets:** Environments are ephemeral. If it breaks, redeploy from code.
+* **Secure by default:** Security is automated and baked in, not bolted on.
 
-## 🎯 Engineering Principles
+## 🔁 Flow & Improvement
 
-1. **KISS (Keep It Simple, Stupid):** Avoid over-engineering. If a shell script works, don't build a microservice.
-2. **Automated Security:**
-   * Scan everything with Trivy.
-   * Hardening (OpenSCAP) is baked into the AMI process.
-   * Sign images with Cosign.
-3. **Ephemeral Environments:** Cattle, not pets. If it breaks, redeploy from code.
-4. **Commits:** Always use conventional commits.
+* **Improvement kata:** For non-trivial changes, state current condition → target condition → next step → what we expect to see.
+* **Blameless 5 whys:** Bugs and incidents get a root-cause pass and a fix to the system, not just the symptom.
+* **YAGNI:** No speculative features, abstractions, or config for needs that don't exist yet.
+* **Decide late:** Defer irreversible decisions; prefer choices that are cheap to change.
+* **Build quality in:** Tests and automation ship with the change.
+* **Finish before starting:** Limit work in progress; close the current task before opening new threads.
+* **Small PRs:** One concern per PR, reviewable in minutes.
+* **Trunk-based + flags:** Short-lived branches, merge often, ship incomplete work dark behind flags.
+* **Fastest check first:** Run quick tests and lint before slow suites; keep CI around 10 minutes.
+* **Deploy often:** Every merge can reach prod through an automated pipeline.
 
-## 🚀 Workflow Standards
+## 🏗 Infrastructure
 
-* **Networking:** Use `nftables` for modern routing logic.
-* **Version Control:** Conventional Commits + `release-please`.
-* **Dependencies:** Trust Renovate to keep the stack current; review PRs for breaking changes only.
+* **Clouds:** AWS (AL2023), GCP. Authenticate via `aws-sso-cli`.
+* **IaC:** Terraform; images built with Packer.
+* **Hardening:** OpenSCAP baked into the AMI process.
+* **Networking:** `nftables` for routing logic.
+
+## 🚢 Platform
+
+* **Kubernetes:** EKS, GKE; switch contexts with `kubie`.
+* **CI/CD:** GitHub Actions.
+* **Supply chain:** Scan everything with Trivy; sign images with Cosign.
+* **Dependencies:** Renovate keeps the stack current; review its PRs for breaking changes only.
+
+## 🛠 Development
+
+* **Languages:** Go, Node.js, Java, Rust.
+* **Commits:** Conventional Commits, released with `release-please`.
+* **Packaging:** `fpm`.
+
+## 📦 Product
+
+* **Problem first:** State the user problem and what success looks like before proposing a solution.
+* **Hypotheses, not facts:** Name the assumption behind a feature and how it gets validated.
+* **Cheapest test first:** Validate with the lowest-cost experiment (mock, spike, manual process) before a full build.
+* **Thin slices:** Ship the smallest useful vertical slice; avoid big-bang releases.
+* **Buy before build:** Prefer managed services, SaaS, or existing OSS over custom code.
+* **Measure it:** Each feature ships with how we'll know it worked.
+* **Evidence over opinion:** Prefer user data, interviews, and usage signals.
+* **Pivot or persevere:** After a slice ships and is measured, decide: continue, change course, or kill.
+* **ADRs for one-way doors:** Write a short decision record for hard-to-reverse choices.
+* **Docs are part of done:** README/runbook updated in the same change.
+* **Plain-language updates:** Stakeholder writing leads with impact and skips jargon.
+
+## 🧭 Repo Modes
+
+* **Owned repos** (`pelotech`, `josmo` orgs): Improve as you go — fix stale patterns, upgrade, refactor toward these practices, and say what changed.
+* **Everything else** (client and unknown repos): Match the repo's existing patterns; consistency first. Suggest improvements, don't make them unasked.
+
+## ♻️ Keep This Current
+
+* When you notice a stale rule, a gap, or a practice we keep repeating, end your reply with a **proposed** edit to the relevant section of this file, `host.md`, or the private notes. Never edit them silently.
 
 ## 🌊 Personal
 
