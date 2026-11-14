@@ -60,12 +60,14 @@ Source of truth for engineering practices, by area. **Keep it simple, easy to un
 
 ## 🧭 Repo Modes
 
-* **Owned repos** (`pelotech`, `josmo` orgs): Improve as you go — fix stale patterns, upgrade, refactor toward these practices, and say what changed.
-* **Everything else** (client and unknown repos): Match the repo's existing patterns; consistency first. Suggest improvements, don't make them unasked.
+Repo mode decides how strictly the practices above apply.
+
+* **Owned repos** (`pelotech`, `josmo` orgs, excluding forks of others' projects): Improve as you go — fix stale patterns, upgrade, refactor toward these practices, and say what changed.
+* **Everything else** (client, forked, and unknown repos): Match the repo's existing patterns; consistency first. Suggest improvements, don't make them unasked.
 
 ## ♻️ Keep This Current
 
-* When you notice a stale rule, a gap, or a practice we keep repeating, end your reply with a **proposed** edit to the relevant section of this file, `host.md`, or the private notes. Never edit them silently.
+* When you notice a stale rule, a gap, or a practice we keep repeating, end your reply with a **proposed** edit to the relevant section of this file, `host.md`, or the private notes. Don't edit these files unless the user asks or approves.
 
 ## 🌊 Personal
 

@@ -30,8 +30,9 @@ in `.config/agents/`:
 | `host.md` | Tool preferences for this Mac (MCP servers, IntelliJ) | Agents on the Mac |
 
 `core.md` names the owned orgs (`pelotech`, `josmo`), where agents improve as they go. Every
-other repo is treated as a client repo: match its patterns and suggest improvements. Agents
-propose edits to these files when they spot a gap; they never edit them silently.
+other repo (including forks) is treated as a client repo: match its patterns and suggest
+improvements. Agents propose edits to these files when they spot a gap, and only make them
+when asked or approved.
 
 Each agent is pointed at them its own way:
 
