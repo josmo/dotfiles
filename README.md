@@ -27,7 +27,7 @@ in `.config/agents/`:
 | File | What | Who reads it |
 |------|------|--------------|
 | `core.md` | Practices by area (principles, flow, infrastructure, platform, development, product), repo modes, and the keep-current rule | Every agent, on the Mac and in sandboxes |
-| `host.md` | Tool preferences for this Mac (MCP servers, IntelliJ) | Agents on the Mac |
+| `host.md` | Tool preferences for this Mac (MCP servers) | Agents on the Mac |
 
 `core.md` names the owned orgs (`pelotech`, `josmo`), where agents improve as they go. Every
 other repo (including forks) is treated as a client repo: match its patterns and suggest
