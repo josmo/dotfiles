@@ -53,3 +53,18 @@ dependencies:
   mcp: []
 includes: auto
 scripts: {}
+# APM rewrites ~/.claude/settings.json's hooks on every install and update. context-mode's hook on
+# the Agent tool changes each subagent's prompt, which makes Claude Code's auto mode refuse to
+# launch subagents, so it is removed again each time. Enable once per machine:
+# `cd ~/.apm && apm lifecycle trust`.
+lifecycle:
+  post-install:
+  - type: command
+    description: Remove context-mode's hook on the Agent tool (it breaks auto mode's subagents)
+    command: python3 ~/.apm/scripts/drop-context-mode-agent-hook.py
+    timeoutSec: 30
+  post-update:
+  - type: command
+    description: Remove context-mode's hook on the Agent tool (it breaks auto mode's subagents)
+    command: python3 ~/.apm/scripts/drop-context-mode-agent-hook.py
+    timeoutSec: 30
