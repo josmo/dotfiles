@@ -13,6 +13,7 @@ Source of truth for engineering practices, by area. **Keep it simple, easy to un
 
 ## 🔁 Flow & Improvement
 
+* **Skills first:** At the start of each task, load the `using-superpowers` skill if it's available and not already in context.
 * **Improvement kata:** For non-trivial changes, state current condition → target condition → next step → what we expect to see.
 * **Blameless 5 whys:** Bugs and incidents get a root-cause pass and a fix to the system, not just the symptom.
 * **YAGNI:** No speculative features, abstractions, or config for needs that don't exist yet.
@@ -37,6 +38,7 @@ Source of truth for engineering practices, by area. **Keep it simple, easy to un
 * **CI/CD:** GitHub Actions.
 * **Supply chain:** Scan everything with Trivy; sign images with Cosign.
 * **Dependencies:** Renovate keeps the stack current; review its PRs for breaking changes only.
+* **Agent packages (APM):** Keep global installs to daily drivers and add domain packs per project. Pin hook-heavy packages, and repair their hooks in `.apm/scripts/fix-apm-hooks.py` after each install.
 
 ## 🛠 Development
 
