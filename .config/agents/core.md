@@ -45,6 +45,7 @@ Source of truth for engineering practices, by area. **Keep it simple, easy to un
 * **Languages:** Go, Node.js, Java, Rust.
 * **Commits:** Conventional Commits, released with `release-please`.
 * **Packaging:** `fpm`.
+* **Spec over implementation:** When a published spec exists, conform to it rather than to a reference implementation's observed behaviour; record the differences.
 
 ## 📦 Product
 
