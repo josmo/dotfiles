@@ -19,6 +19,7 @@ Source of truth for engineering practices, by area. **Keep it simple, easy to un
 * **YAGNI:** No speculative features, abstractions, or config for needs that don't exist yet.
 * **Decide late:** Defer irreversible decisions; prefer choices that are cheap to change.
 * **Build quality in:** Tests and automation ship with the change.
+* **Simplify before done:** Before claiming a non-trivial change is complete, review your diff for anything to delete, flatten, or simplify without changing behavior (staying within your diff in client repos), then re-verify.
 * **Finish before starting:** Limit work in progress; close the current task before opening new threads.
 * **Small PRs:** One concern per PR, reviewable in minutes.
 * **Trunk-based + flags:** Short-lived branches, merge often, ship incomplete work dark behind flags.

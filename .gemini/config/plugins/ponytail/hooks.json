@@ -1,0 +1,11 @@
+{
+  "ponytail": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "node ./activate.js",
+        "timeout": 5
+      }
+    ]
+  }
+}

@@ -6,7 +6,8 @@
     "~/.claude/CLAUDE.private.md"
   ],
   "plugin": [
-    "@ex-machina/opencode-anthropic-auth"
+    "@ex-machina/opencode-anthropic-auth",
+    "@dietrichgebert/ponytail"
   ],
   "permission": {
     "skill": {

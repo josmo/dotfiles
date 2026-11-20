@@ -31,8 +31,10 @@ dependencies:
     # --- context-mode v2: the Claude plugin lives in plugins/claude-code. Pinned because
     # HEAD can change hook layout; APM merges every hooks/*.json, which fix-apm-hooks.py cleans.
     - mksglu/context-mode/plugins/claude-code#a0e429558100c41fba1bb91be852da23c3423a90
-    # --- ponytail: smallest-working-solution mode. Hooks need fix-apm-hooks.py (they read
-    # CLAUDE_PLUGIN_ROOT, which APM doesn't set). Its status-line band only works natively.
+    # --- ponytail: smallest-working-solution mode. Claude hooks need fix-apm-hooks.py (they
+    # read CLAUDE_PLUGIN_ROOT, which APM doesn't set); OpenCode loads @dietrichgebert/ponytail
+    # via opencode.json, and Antigravity runs a SessionStart shim in .gemini/config/plugins/ponytail/.
+    # Its status-line band only works natively in Claude Code.
     - DietrichGebert/ponytail#v5.3.3
 
     # --- Disabled (2026-11-20) ---
