@@ -13,8 +13,9 @@ project `apm.yml`, so they load only where they're useful.
 1. **Detect signals.** Run this from the repo root; its short output is the signal list (don't
    rely on `ls`, which hooks may truncate):
    ```bash
-   git ls-files | grep -E '(^|/)(go\.mod|Cargo\.toml|pom\.xml|build\.gradle(\.kts)?|package\.json|pyproject\.toml|requirements[^/]*\.txt|Chart\.yaml|kustomization\.ya?ml|Dockerfile|\.gitlab-ci\.yml|playwright\.config\.[jt]s)$|\.(tf|pkr\.hcl)$|^supabase/' | sort -u | head -50
-   grep -lE 'transformers|torch|datasets|diffusers|@supabase/|@figma/|@playwright/test' $(git ls-files | grep -E '(^|/)(package\.json|pyproject\.toml|requirements[^/]*\.txt)$') 2>/dev/null
+   git ls-files | grep -E '(^|/)(go\.mod|Cargo\.toml|pom\.xml|build\.gradle(\.kts)?|package\.json|pyproject\.toml|requirements[^/]*\.txt|Chart\.yaml|kustomization\.ya?ml|[^/]*Dockerfile[^/]*|\.gitlab-ci\.yml|playwright\.config\.[jt]s|supabase/config\.toml)$|\.(tf|pkr\.hcl)$' | sort -u | head -50
+   git grep -lE 'transformers|torch|datasets|diffusers|@supabase/|@figma/|@playwright/test' -- '*package.json' '*pyproject.toml' '*requirements*.txt'
+   git remote -v | grep -qi gitlab && echo gitlab-remote
    ```
    Map each hit to a table row and record the file that proves it. A file with no row is not a
    signal; skip it.
@@ -46,8 +47,12 @@ project `apm.yml`, so they load only where they're useful.
      <plugin>@<marketplace>#<sha>` with the SHA of the marketplace's repo (URL from
      `apm marketplace list`); apm resolves the path. MCP: `apm mcp install …`.
    - Don't use `apm install --dry-run` before approval: it still creates `apm.yml`.
-   - Commit only the apm files, never the user's other changes:
-     `git add apm.yml apm.lock.yaml && git commit -m "chore(apm): add project agent packs"`.
+   - Before installing: if `apm.yml` or `apm.lock.yaml` already has uncommitted changes, stop and
+     ask the user.
+   - Commit only the apm files, never the user's other staged changes (the pathspec does that):
+     `git add apm.yml apm.lock.yaml && git commit -m "chore(apm): add project agent packs" -- apm.yml apm.lock.yaml`.
+   - Tell the user which other files the install created (e.g. `apm_modules/`, `.claude/`) and
+     that they're left uncommitted.
    - Never push. Never edit `~/.apm/apm.yml`.
 
 ## Signal table
@@ -55,9 +60,9 @@ project `apm.yml`, so they load only where they're useful.
 | Signal | Files | Pack (vetted) |
 |---|---|---|
 | ML / Hugging Face | `transformers`, `torch`, `datasets`, `diffusers` in `requirements*.txt` / `pyproject.toml` | `huggingface/skills` |
-| Figma designs | Figma URLs or `@figma/*` deps | `figma/mcp-server-guide` |
-| Supabase | `supabase/` dir, `@supabase/*` deps | `supabase-community/supabase-plugin` |
-| GitLab | `.gitlab-ci.yml`, gitlab remote | `anthropics/claude-plugins-official/external_plugins/gitlab` |
+| Figma designs | `@figma/*` deps | `figma/mcp-server-guide` |
+| Supabase | `supabase/config.toml`, `@supabase/*` deps | `supabase-community/supabase-plugin` |
+| GitLab | `.gitlab-ci.yml`, `gitlab-remote` | `anthropics/claude-plugins-official/external_plugins/gitlab` |
 | Browser tests | `playwright.config.*`, `@playwright/test` | `anthropics/claude-plugins-official/external_plugins/playwright` |
 | Terraform | `*.tf` | search: terraform |
 | Kubernetes / Helm | `Chart.yaml`, `kustomization.yaml` | search: kubernetes, helm |
