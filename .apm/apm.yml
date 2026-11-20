@@ -27,6 +27,8 @@ dependencies:
     # leaks into ~/.claude/settings.json and Claude Code rejects the hooks.
     # --- VoltAgent: only the 4 agents used (vendored; APM can't pin a plain .md file) ---
     - ~/.apm/packages/voltagent-pinned  # must be absolute or ~/ at user scope (--global)
+    # --- Personal skills: apm-repo-setup adds domain packs to a repo's own apm.yml ---
+    - ~/.apm/packages/josmo-skills
     # --- context-mode v2: the Claude plugin lives in plugins/claude-code. Pinned because
     # HEAD can change hook layout; APM merges every hooks/*.json, which fix-apm-hooks.py cleans.
     - mksglu/context-mode/plugins/claude-code#a0e429558100c41fba1bb91be852da23c3423a90

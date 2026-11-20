@@ -1,0 +1,8 @@
+name: josmo-skills
+version: 1.0.0
+description: >-
+  Personal skills kept in dotfiles. apm-repo-setup: propose, pin, install and commit a repo's
+  domain agent packs so the global apm.yml stays limited to daily drivers.
+author: Joachim Hill-Grannec
+license: MIT
+type: hybrid

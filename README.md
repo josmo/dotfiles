@@ -56,3 +56,7 @@ Antigravity and `sandbox` once:
 **Why plain files and not APM:** APM manages plugins (skills, agents, hooks) in `.apm/`.
 Instructions are a few markdown files every agent reads directly, so a package manager adds
 nothing.
+
+**Domain packs per repo:** the global `.apm/apm.yml` holds daily drivers only. In a repo, ask
+the agent to "set up apm for this repo": the `apm-repo-setup` skill (in
+`.apm/packages/josmo-skills`) proposes pinned domain packs and commits the repo's `apm.yml`.
