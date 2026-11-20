@@ -20,7 +20,6 @@ dependencies:
     - anthropics/claude-plugins-official/plugins/claude-code-setup
     - anthropics/claude-plugins-official/plugins/skill-creator
     - anthropics/claude-plugins-official/external_plugins/context7
-    - anthropics/claude-plugins-official/external_plugins/github
     # NOTE: typescript-lsp (LSP-only, no plugin manifest) and slackapi/slack-mcp-plugin
     # (uses claude-code-plugin-manifest $schema, rejected by APM 0.29) are excluded.
     # stripe/ai/providers/claude/plugin is excluded too: its hooks put the script path
@@ -64,6 +63,11 @@ dependencies:
     # - anthropics/claude-plugins-official/plugins/code-review
     #   Why: 0 uses; superpowers requesting-code-review + built-in /code-review cover it.
     #   Bring back: if you want its PR-comment flow on GitHub PRs specifically.
+    #
+    # - anthropics/claude-plugins-official/external_plugins/github
+    #   Why: gh CLI is authenticated and covers more (Actions logs, gh api); the MCP's
+    #   token went stale ("Bad credentials") and its ~25 tools load in every session.
+    #   Bring back: if an agent runs somewhere without a shell or gh.
     #
     # - anthropics/claude-plugins-official/plugins/feature-dev
     #   Why: 0 uses; a second explore/architect/build process competing with superpowers'

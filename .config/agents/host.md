@@ -3,5 +3,5 @@ trigger: always_on
 ---
 ## 🧰 Tool Preferences (this machine)
 
-* **GitHub:** Always prioritize using the GitHub MCP server tools over the `gh` CLI or shell commands.
+* **GitHub:** Use the `gh` CLI (`gh api` for anything without a subcommand).
 * **Slack:** Always prioritize using the Slack MCP server tools over the Slack CLI.
