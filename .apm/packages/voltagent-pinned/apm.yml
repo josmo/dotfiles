@@ -1,0 +1,11 @@
+name: voltagent-pinned
+version: ed74d11-apm1
+description: >-
+  The 4 VoltAgent subagents actually used (rust-engineer, technical-writer, ui-designer,
+  research-analyst), copied from voltagent/awesome-claude-code-subagents@ed74d11. APM can't
+  depend on a single plain .md file (it needs .agent.md), and the full categories add ~120
+  unused agents to every session. Refresh by copying the files from upstream categories.
+author: VoltAgent Community (vendored by Joachim Hill-Grannec)
+license: MIT
+repository: https://github.com/VoltAgent/awesome-claude-code-subagents
+type: hybrid

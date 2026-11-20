@@ -14,57 +14,83 @@ dependencies:
     - obra/superpowers
     # --- anthropics/claude-plugins-official ---
     - anthropics/claude-plugins-official/plugins/frontend-design
-    - anthropics/claude-plugins-official/plugins/code-review
-    - anthropics/claude-plugins-official/plugins/feature-dev
-    - anthropics/claude-plugins-official/plugins/code-simplifier
     - anthropics/claude-plugins-official/plugins/security-guidance
     - anthropics/claude-plugins-official/plugins/claude-md-management
     - anthropics/claude-plugins-official/plugins/pr-review-toolkit
     - anthropics/claude-plugins-official/plugins/claude-code-setup
     - anthropics/claude-plugins-official/plugins/skill-creator
-    # hookify: vendored under ./packages with core/ inside hooks/ so APM-deployed
-    # hook scripts can import it (upstream bug microsoft/apm#2824). Refresh from
-    # anthropics/claude-plugins-official/plugins/hookify when it changes.
-    - ~/.apm/packages/hookify  # must be absolute or ~/ at user scope (--global)
     - anthropics/claude-plugins-official/external_plugins/context7
     - anthropics/claude-plugins-official/external_plugins/github
-    - anthropics/claude-plugins-official/external_plugins/playwright
-    - anthropics/claude-plugins-official/external_plugins/gitlab
-    # --- vendor plugins referenced by the official marketplace ---
     # NOTE: typescript-lsp (LSP-only, no plugin manifest) and slackapi/slack-mcp-plugin
     # (uses claude-code-plugin-manifest $schema, rejected by APM 0.29) are excluded.
     # stripe/ai/providers/claude/plugin is excluded too: its hooks put the script path
     # in an "args" array, which APM 0.29 does not rewrite, so ${CLAUDE_PLUGIN_ROOT}
     # leaks into ~/.claude/settings.json and Claude Code rejects the hooks.
-    - figma/mcp-server-guide
-    - supabase-community/supabase-plugin
-    - huggingface/skills
-    # --- VoltAgent subagent collections ---
-    - voltagent/awesome-claude-code-subagents/categories/01-core-development
-    - voltagent/awesome-claude-code-subagents/categories/02-language-specialists
-    - voltagent/awesome-claude-code-subagents/categories/03-infrastructure
-    - voltagent/awesome-claude-code-subagents/categories/05-data-ai
-    - voltagent/awesome-claude-code-subagents/categories/07-specialized-domains
-    - voltagent/awesome-claude-code-subagents/categories/08-business-product
-    - voltagent/awesome-claude-code-subagents/categories/09-meta-orchestration
-    - voltagent/awesome-claude-code-subagents/categories/10-research-analysis
-    # --- context-mode ---
-    - mksglu/context-mode
+    # --- VoltAgent: only the 4 agents used (vendored; APM can't pin a plain .md file) ---
+    - ~/.apm/packages/voltagent-pinned  # must be absolute or ~/ at user scope (--global)
+    # --- context-mode v2: the Claude plugin lives in plugins/claude-code. Pinned because
+    # HEAD can change hook layout; APM merges every hooks/*.json, which fix-apm-hooks.py cleans.
+    - mksglu/context-mode/plugins/claude-code#a0e429558100c41fba1bb91be852da23c3423a90
+    # --- ponytail: smallest-working-solution mode. Hooks need fix-apm-hooks.py (they read
+    # CLAUDE_PLUGIN_ROOT, which APM doesn't set). Its status-line band only works natively.
+    - DietrichGebert/ponytail#v5.3.3
+
+    # --- Disabled (2026-11-20) ---
+    # Usage counts are from 804 Claude Code sessions. Re-enable by uncommenting, or prefer a
+    # project-level apm.yml (`apm install <pkg>` in that repo) for domain-specific packs.
+    #
+    # - voltagent/awesome-claude-code-subagents/categories/{01-core-development,
+    #     02-language-specialists,03-infrastructure,05-data-ai,07-specialized-domains,
+    #     08-business-product,09-meta-orchestration,10-research-analysis}
+    #   Why: 125 agents (~7k tokens/session), 4 used; those 4 live in packages/voltagent-pinned.
+    #   Bring back: copy any other agent you start wanting into packages/voltagent-pinned.
+    #
+    # - huggingface/skills
+    #   Why: 25 skills + a remote MCP in every session, 0 uses.
+    #   Bring back: in ML/Hugging Face/SageMaker repos, as a project-level dependency.
+    #
+    # - ~/.apm/packages/hookify  (vendored copy deleted)
+    #   Why: 0 rules written, yet Python ran on every tool call, prompt and stop.
+    #   Bring back: when you want your first hookify rule. Check microsoft/apm#2824 first; if
+    #   fixed, use anthropics/claude-plugins-official/plugins/hookify instead of vendoring.
+    #
+    # - anthropics/claude-plugins-official/plugins/code-simplifier
+    #   Why: pr-review-toolkit ships an agent with the same name (one overwrote the other);
+    #   the built-in /simplify covers it too.
+    #   Bring back: never, unless pr-review-toolkit drops its copy.
+    #
+    # - anthropics/claude-plugins-official/plugins/code-review
+    #   Why: 0 uses; superpowers requesting-code-review + built-in /code-review cover it.
+    #   Bring back: if you want its PR-comment flow on GitHub PRs specifically.
+    #
+    # - anthropics/claude-plugins-official/plugins/feature-dev
+    #   Why: 0 uses; a second explore/architect/build process competing with superpowers'
+    #   brainstorming -> writing-plans -> subagent-driven-development.
+    #   Bring back: if you stop using superpowers.
+    #
+    # - figma/mcp-server-guide
+    # - supabase-community/supabase-plugin
+    #   Why: 0 uses; skills + MCP in every session.
+    #   Bring back: in a repo that uses Figma designs / Supabase, as a project-level dependency.
+    #
+    # - anthropics/claude-plugins-official/external_plugins/gitlab
+    # - anthropics/claude-plugins-official/external_plugins/playwright
+    #   Why: 0 uses; playwright failed to connect at every session start.
+    #   Bring back: in a GitLab-hosted repo / for browser-driven testing, project-level.
   mcp: []
 includes: auto
 scripts: {}
-# APM rewrites ~/.claude/settings.json's hooks on every install and update. context-mode's hook on
-# the Agent tool changes each subagent's prompt, which makes Claude Code's auto mode refuse to
-# launch subagents, so it is removed again each time. Enable once per machine:
-# `cd ~/.apm && apm lifecycle trust`.
+# APM rewrites ~/.claude/settings.json's hooks on every install and update, so fix-apm-hooks.py
+# repairs context-mode's, ponytail's and superpowers' hooks each time (see its docstring).
+# Enable once per machine: `cd ~/.apm && apm lifecycle trust`.
 lifecycle:
   post-install:
   - type: command
-    description: Remove context-mode's hook on the Agent tool (it breaks auto mode's subagents)
-    command: python3 ~/.apm/scripts/drop-context-mode-agent-hook.py
+    description: Repair APM-written hooks for context-mode and ponytail
+    command: python3 ~/.apm/scripts/fix-apm-hooks.py
     timeoutSec: 30
   post-update:
   - type: command
-    description: Remove context-mode's hook on the Agent tool (it breaks auto mode's subagents)
-    command: python3 ~/.apm/scripts/drop-context-mode-agent-hook.py
+    description: Repair APM-written hooks for context-mode and ponytail
+    command: python3 ~/.apm/scripts/fix-apm-hooks.py
     timeoutSec: 30
