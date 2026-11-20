@@ -10,14 +10,20 @@ project `apm.yml`, so they load only where they're useful.
 
 ## Flow
 
-1. **Detect signals.** Read the repo root and manifests. Look for the files in the table below.
-   Record each signal with the file that proves it.
+1. **Detect signals.** Run this from the repo root; its short output is the signal list (don't
+   rely on `ls`, which hooks may truncate):
+   ```bash
+   git ls-files | grep -E '(^|/)(go\.mod|Cargo\.toml|pom\.xml|build\.gradle(\.kts)?|package\.json|pyproject\.toml|requirements[^/]*\.txt|Chart\.yaml|kustomization\.ya?ml|Dockerfile|\.gitlab-ci\.yml|playwright\.config\.[jt]s)$|\.(tf|pkr\.hcl)$|^supabase/' | sort -u | head -50
+   grep -lE 'transformers|torch|datasets|diffusers|@supabase/|@figma/|@playwright/test' $(git ls-files | grep -E '(^|/)(package\.json|pyproject\.toml|requirements[^/]*\.txt)$') 2>/dev/null
+   ```
+   Map each hit to a table row and record the file that proves it. A file with no row is not a
+   signal; skip it.
 2. **Map signals.** First the table below (vetted). Then the `# --- Disabled` notes in
    `~/.apm/apm.yml`: a "Bring back: in a … repo" line matching a signal makes that pack vetted too.
 3. **Search gaps.** For each signal with no vetted pack:
-   - `apm marketplace list`, then `COLUMNS=200 apm search <signal>@<marketplace> --limit 3` per
-     marketplace.
-   - `COLUMNS=200 apm mcp search <signal>`.
+   - `apm marketplace list`, then `COLUMNS=200 apm search <term>@<marketplace> --limit 3` per
+     marketplace and per search term in the row (the "search: …" terms).
+   - `COLUMNS=200 apm mcp search <term>` per term.
    - Keep at most 3 hits per signal that actually match the signal, not the word. Mark them
      **unvetted**. No hits or a command error: write "no hits" for that signal and continue.
 4. **Drop what's there.** Remove any pack already listed in `~/.apm/apm.yml` dependencies (active,
@@ -36,7 +42,10 @@ project `apm.yml`, so they load only where they're useful.
      narrow `targets`; let apm detect them.
    - Pin each pack: newest release tag from `apm view <owner/repo> versions`; no tags →
      full SHA from `git ls-remote https://github.com/<owner/repo> HEAD`. Install as
-     `apm install <owner/repo[/path]>#<tag-or-sha>` (MCP: `apm mcp install …`).
+     `apm install <owner/repo[/path]>#<tag-or-sha>`. Marketplace hits: `apm install
+     <plugin>@<marketplace>#<sha>` with the SHA of the marketplace's repo (URL from
+     `apm marketplace list`); apm resolves the path. MCP: `apm mcp install …`.
+   - Don't use `apm install --dry-run` before approval: it still creates `apm.yml`.
    - Commit only the apm files, never the user's other changes:
      `git add apm.yml apm.lock.yaml && git commit -m "chore(apm): add project agent packs"`.
    - Never push. Never edit `~/.apm/apm.yml`.
@@ -50,13 +59,13 @@ project `apm.yml`, so they load only where they're useful.
 | Supabase | `supabase/` dir, `@supabase/*` deps | `supabase-community/supabase-plugin` |
 | GitLab | `.gitlab-ci.yml`, gitlab remote | `anthropics/claude-plugins-official/external_plugins/gitlab` |
 | Browser tests | `playwright.config.*`, `@playwright/test` | `anthropics/claude-plugins-official/external_plugins/playwright` |
-| Terraform | `*.tf` | search |
-| Kubernetes / Helm | `Chart.yaml`, `kustomization.yaml`, manifests with `apiVersion:` + `kind:` | search |
-| Go | `go.mod` | search |
-| Rust | `Cargo.toml` | search |
-| Java | `pom.xml`, `build.gradle*` | search |
-| Node / frontend | `package.json` | search |
-| Containers / images | `Dockerfile`, `*.pkr.hcl` | search |
+| Terraform | `*.tf` | search: terraform |
+| Kubernetes / Helm | `Chart.yaml`, `kustomization.yaml` | search: kubernetes, helm |
+| Go | `go.mod` | search: golang, go |
+| Rust | `Cargo.toml` | search: rust |
+| Java | `pom.xml`, `build.gradle*` | search: java, spring |
+| Node / frontend | `package.json` | search: node, typescript |
+| Containers / images | `Dockerfile`, `*.pkr.hcl` | search: docker, packer |
 
 When the user adopts a search hit, offer to add it to this table as a vetted row.
 
