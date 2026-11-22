@@ -2,3 +2,5 @@
 # symlinking. Needed where a tool refuses symlinks (apm). Repo wins on every run.
 .apm/*
 .config/opencode/opencode.json
+# Kit builds copy the kit into a builder VM and can't follow symlinks.
+.config/sandbox/kits/*

@@ -44,7 +44,9 @@ Each agent is pointed at them its own way:
 - **[`sandbox`](https://github.com/josmo/nix-darwin-config/tree/main/sandbox):** joins every
   `.md` in `.config/sandbox/instructions/`, in name order, after its own sandbox notes:
   `10-core.md` (a symlink to `core.md`) and `20-host.md` (host tools that aren't in the VM).
-  `host.md` stays out.
+  `host.md` stays out. Its environment is `.sbxenv.yaml` (read by `bento env run` from `~/`),
+  with the agent-config kit in `.config/sandbox/kits/` (copied, not linked: see
+  `.dotfiles-copy`).
 
 **Private notes** (client org names, Slack server names, anything personal) never go in this
 public repo. They live in `~/.claude/CLAUDE.private.md`, which every agent above also reads

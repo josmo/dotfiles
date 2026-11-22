@@ -1,0 +1,36 @@
+# The `sandbox` command's environment (sbx's sbxenv.yaml format, smolbento 0.35+). With no paths,
+# `bento env run` reads this file, then the project's ./sbxenv.yaml on top. The `sandbox` script
+# passes `agent`, `stage` and, for Antigravity, `agentKit`. Host commands (`lifecycle`,
+# `command:` secrets) don't go here: they'd ask for approval on every run.
+schemaVersion: "1"
+agent: ${{ env.args.agent }}
+args:
+  agent:
+    default: claude
+  # The staged agent config (instructions, subagents, commands), mounted read-only.
+  stage:
+    required: true
+  # A workload kit for the agent (Antigravity's). Empty for built-in agents: a workload kit
+  # listed for every agent clashes with theirs, and smolbento drops an empty entry.
+  agentKit:
+    default: ""
+workspace:
+  path: ${{ env.projectDir }}
+  clone: true
+additionalWorkspaces:
+  - path: ${{ env.args.stage }}
+    readOnly: true
+kits:
+  # Nix (flakes), direnv and xz, from smolbento; pinned while it's 0.x.
+  - ghcr.io/pelotech/smolbento/kits/nix:0.2.0
+  # smolbento's built-in kit: your git identity and commits signed with the first key in your
+  # SSH agent.
+  - source: git-signing
+  # Copied (not linked) by link-dotfiles.sh; see .dotfiles-copy.
+  - source: .config/sandbox/kits/agent-config
+    args:
+      AGENT_CONFIG: ${{ env.args.stage }}
+  - ${{ env.args.agentKit }}
+env:
+  OLLAMA_HOST: http://host.docker.internal:11434
+  CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1"

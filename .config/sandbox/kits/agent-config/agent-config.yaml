@@ -1,0 +1,66 @@
+# syntax=docker/sandbox-kit:3
+# Personal agent instructions, subagents and commands for every agent; see ../README.md.
+schemaVersion: "3"
+kind: mixin
+displayName: Agent config
+description: Adds personal instructions to each agent's own instructions file and links its subagents and commands to a read-only host directory.
+version: "3.1.0"
+provides: [agent-config]
+
+args:
+  # The `sandbox` command's staging directory, which it also mounts read-only (`DIR:ro`) at the
+  # same path. Empty: nothing is linked.
+  AGENT_CONFIG:
+    default: ""
+    env: AGENT_CONFIG
+
+capabilities:
+  # OpenCode's own models (its default, big-pickle), which the balanced policy doesn't allow.
+  - type: com.docker.sandbox/network-policy@2
+    config:
+      runtime:
+        allow: [{hosts: [opencode.ai, "*.opencode.ai"]}]
+
+  - type: com.docker.sandbox/lifecycle@1
+    config:
+      startup:
+        - command: |
+            set -e
+            c=$AGENT_CONFIG h=$HOME
+            [ -n "$c" ] || exit 0
+            b='<!-- sandbox:instructions start -->' e='<!-- sandbox:instructions end -->'
+            # add FILE: put the staged instructions at the end of FILE, between the markers,
+            # replacing the last copy and keeping the rest: the agent kit's own guide and
+            # smolbento's list of kit tips.
+            add() {
+              [ -e "$c/AGENTS.md" ] || return 0
+              mkdir -p "$(dirname "$1")"
+              [ ! -L "$1" ] || rm -f "$1"  # agent-config 2.x linked it
+              rest=$(awk -v b="$b" -v e="$e" '$0 == b { s = 1; next } $0 == e { s = 0; next } !s' "$1" 2>/dev/null || :)
+              { [ -z "$rest" ] || printf '%s\n\n' "$rest"; echo "$b"; cat "$c/AGENTS.md"; echo "$e"; } > "$1.new"
+              cat "$1.new" > "$1"  # keeps the file's owner
+              rm -f "$1.new"
+            }
+            # link TARGET PATH: point PATH at TARGET, replacing whatever is there.
+            link() {
+              [ -e "$1" ] || return 0
+              mkdir -p "$(dirname "$2")"
+              [ -L "$2" ] || rm -rf "$2"
+              ln -sfn "$1" "$2"
+            }
+            add "$h/.claude/CLAUDE.md"
+            add "$h/.config/opencode/AGENTS.md"
+            add "$h/.codex/AGENTS.md"
+            add "$h/.gemini/GEMINI.md"
+            add "$h/.copilot/copilot-instructions.md"
+            # Antigravity's kit writes its guide and smolbento's kit tips to ~/AGENTS.md, which
+            # Antigravity doesn't read; ~/.gemini/AGENTS.md it does.
+            link "$h/AGENTS.md" "$h/.gemini/AGENTS.md"
+            for a in claude opencode; do
+              d=$h/.$a; [ $a = opencode ] && d=$h/.config/opencode
+              link "$c/$a/agents" "$d/agents"
+              link "$c/$a/commands" "$d/commands"
+            done
+          # Startup steps run as root unless they name a user (smolbento 0.20.1).
+          user: agent
+          description: Add agent instructions; link subagents and commands
