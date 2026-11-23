@@ -67,7 +67,7 @@ Source of truth for engineering practices, by area. **Keep it simple, easy to un
 Repo mode decides how strictly the practices above apply.
 
 * **Owned repos** (`pelotech`, `josmo` orgs, excluding forks of others' projects): Improve as you go — fix stale patterns, upgrade, refactor toward these practices, and say what changed.
-* **Everything else** (client, forked, and unknown repos): Match the repo's existing patterns; consistency first. Suggest improvements, don't make them unasked.
+* **Everything else** (client, forked, and unknown repos): Match the repo's existing patterns; consistency first. Suggest improvements, don't make them unasked. Don't reference other orgs or repos in commits, PRs, or comments without asking.
 
 ## ♻️ Keep This Current
 
