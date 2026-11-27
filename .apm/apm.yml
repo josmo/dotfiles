@@ -30,10 +30,10 @@ dependencies:
     # --- Personal skills: apm-repo-setup adds domain packs to a repo's own apm.yml ---
     - ~/.apm/packages/josmo-skills
     # --- context-mode v2: the Claude plugin lives in plugins/claude-code. Pinned because
-    # HEAD can change hook layout; APM merges every hooks/*.json, which fix-apm-hooks.py cleans.
+    # HEAD can change hook layout. APM 0.39+ installs it as a native Claude plugin.
     - mksglu/context-mode/plugins/claude-code#a0e429558100c41fba1bb91be852da23c3423a90
-    # --- ponytail: smallest-working-solution mode. Claude hooks need fix-apm-hooks.py (they
-    # read CLAUDE_PLUGIN_ROOT, which APM doesn't set); OpenCode loads @dietrichgebert/ponytail
+    # --- ponytail: smallest-working-solution mode. APM parks it as a native plugin (it ships
+    # userConfig), so its loose Claude hooks need fix-apm-hooks.py (they read CLAUDE_PLUGIN_ROOT); OpenCode loads @dietrichgebert/ponytail
     # via opencode.json, and Antigravity runs a SessionStart shim in .gemini/config/plugins/ponytail/.
     # Its status-line band only works natively in Claude Code.
     - DietrichGebert/ponytail#v5.3.3
@@ -89,16 +89,16 @@ dependencies:
 includes: auto
 scripts: {}
 # APM rewrites ~/.claude/settings.json's hooks on every install and update, so fix-apm-hooks.py
-# repairs context-mode's, ponytail's and superpowers' hooks each time (see its docstring).
+# repairs ponytail's hooks and drops stale ones each time (see its docstring).
 # Enable once per machine: `cd ~/.apm && apm lifecycle trust`.
 lifecycle:
   post-install:
   - type: command
-    description: Repair APM-written hooks for context-mode and ponytail
+    description: Repair APM-written hooks for ponytail and drop stale ones
     command: python3 ~/.apm/scripts/fix-apm-hooks.py
     timeoutSec: 30
   post-update:
   - type: command
-    description: Repair APM-written hooks for context-mode and ponytail
+    description: Repair APM-written hooks for ponytail and drop stale ones
     command: python3 ~/.apm/scripts/fix-apm-hooks.py
     timeoutSec: 30
